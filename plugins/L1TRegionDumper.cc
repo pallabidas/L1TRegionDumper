@@ -32,6 +32,12 @@
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "FWCore/Utilities/interface/InputTag.h"
 #include "DataFormats/L1CaloTrigger/interface/L1CaloCollections.h"
+
+#include "FWCore/ServiceRegistry/interface/Service.h"
+#include "CommonTools/UtilAlgos/interface/TFileService.h"
+#include "TFile.h"
+#include "TTree.h"
+
 //
 // class declaration
 //
@@ -75,6 +81,11 @@ private:
   edm::ESGetToken<SetupData, SetupRecord> setupToken_;
 #endif
 
+  edm::Service<TFileService> fs;
+
+  TTree* efficiencyTree;
+  std::vector<uint16_t> cregions; 
+
 };
 
 //
@@ -91,6 +102,8 @@ private:
 L1TRegionDumper::L1TRegionDumper(const edm::ParameterSet& iConfig)
   : regionsToken_(consumes<std::vector <L1CaloRegion> >(iConfig.getUntrackedParameter<edm::InputTag>("UCTRegion"))) {
   //now do what ever initialization is needed
+  efficiencyTree = fs->make<TTree>("efficiencyTree", "efficiencyTree");
+  efficiencyTree->Branch("cregions",     &cregions);
 }
 
 //
@@ -100,24 +113,32 @@ L1TRegionDumper::L1TRegionDumper(const edm::ParameterSet& iConfig)
 // ------------ method called for each event  ------------
 void L1TRegionDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup) {
   using namespace edm;
+  cregions.clear();
+  uint16_t regionColl[14][18];
+  int count=0;
 
   for (const auto& region : iEvent.get(regionsToken_)) {
     uint32_t ieta = region.id().ieta() - 4; // Subtract off the offset for HF
     uint32_t iphi = region.id().iphi();
-    uint32_t regionSummary = region.raw();
-    uint32_t et = (l1tcalo::RegionETMask & regionSummary);
+    uint16_t regionSummary = region.raw();
+    uint32_t et = region.et();
     uint32_t location = ((regionSummary & l1tcalo::LocationBits) >> l1tcalo::LocationShift);
     bool eleBit = !((l1tcalo::RegionEGVeto & regionSummary) == l1tcalo::RegionEGVeto);
     bool tauBit = !((l1tcalo::RegionTauVeto & regionSummary) == l1tcalo::RegionTauVeto);
-    std::cout       
-      << ieta
-      << "," << iphi
-      << "," << et
-      << "," << location
-      << "," << eleBit 
-      << "," << tauBit
-      << std::endl;
+    uint32_t hitTowerLocation = (location & 0xF);
+    regionColl[ieta][iphi] = regionSummary;
+    std::cout<<"count: "<<count<<"\t"<<"et: "<<et<<"\t"<<"ieta : "<<ieta<<"\t"<<"iphi: "<<iphi<<"\t"<<"rloc_eta: "<<((0xFFFF & regionSummary) >> 14)<<"\t"<<"rloc_phi: "<<((0x3FFF & regionSummary) >> 12)<<"\t"<<"location: "<<hitTowerLocation<<"\t"<<"eleBit: "<<eleBit<<"\t"<<"tauBit: "<<tauBit<<std::endl;
+    count++;
   }
+
+  // re-order to properly align the test vector for firmware such that index = phi * 14 + eta;
+  for (unsigned int phi = 0; phi < 18; phi++){
+    for (int eta = 0; eta < 14; eta++){
+      cregions.push_back(regionColl[eta][phi]);
+    }
+  }
+
+  efficiencyTree->Fill();
 
 }
 
