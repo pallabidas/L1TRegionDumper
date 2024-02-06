@@ -3,51 +3,59 @@ import FWCore.ParameterSet.Config as cms
 
 process = cms.Process("L1TRegionDumperTest")
 
-#import EventFilter.L1TXRawToDigi.util as util
-
-# import of standard configurations
 process.load('Configuration.StandardSequences.Services_cff')
 process.load('SimGeneral.HepPDTESSource.pythiapdt_cfi')
 process.load('FWCore.MessageService.MessageLogger_cfi')
 process.load('Configuration.EventContent.EventContent_cff')
-process.load('Configuration.Geometry.GeometryExtended2016Reco_cff')
-process.load('Configuration.StandardSequences.MagneticField_AutoFromDBCurrent_cff')
+process.load('Configuration.StandardSequences.GeometryRecoDB_cff')
+process.load('Configuration.StandardSequences.MagneticField_cff')
 process.load('Configuration.StandardSequences.RawToDigi_Data_cff')
 process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
 from Configuration.AlCa.GlobalTag import GlobalTag
-process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run2_mc', '')
+process.GlobalTag = GlobalTag(process.GlobalTag, '130X_dataRun3_Prompt_v4', '')
 
 process.load('L1Trigger.Configuration.SimL1Emulator_cff')
 process.load('L1Trigger.Configuration.CaloTriggerPrimitives_cff')
 process.load('EventFilter.L1TXRawToDigi.caloLayer1Stage2Digis_cfi')
 
-process.load('L1Trigger.L1TCaloLayer1.simCaloStage2Layer1Digis_cfi')
-process.simCaloStage2Layer1Digis.useECALLUT = cms.bool(True)
-process.simCaloStage2Layer1Digis.useHCALLUT = cms.bool(True)
-process.simCaloStage2Layer1Digis.useHFLUT = cms.bool(True)
-process.simCaloStage2Layer1Digis.useLSB = cms.bool(True)
-process.simCaloStage2Layer1Digis.verbose = cms.bool(True)
-process.simCaloStage2Layer1Digis.ecalToken = cms.InputTag("l1tCaloLayer1Digis")
-process.simCaloStage2Layer1Digis.hcalToken = cms.InputTag("l1tCaloLayer1Digis")
+process.raw2digi_step = cms.Path(process.RawToDigi)
+process.endjob_step = cms.EndPath(process.endOfProcess)
+
+process.schedule = cms.Schedule(process.raw2digi_step, process.endjob_step)
+from PhysicsTools.PatAlgos.tools.helpers import associatePatAlgosToolsTask
+associatePatAlgosToolsTask(process)
+
+from L1Trigger.Configuration.customiseReEmul import L1TReEmulFromRAW
+process = L1TReEmulFromRAW(process)
+
+process.load('L1Trigger.L1TCaloLayer1.L1TCaloSummaryCICADAv1p1p1')
+process.productionTask = cms.Task(
+    process.L1TCaloSummaryCICADAv1p1p1,
+)
+process.productionPath = cms.Path(process.productionTask)
+process.schedule.append(process.productionPath)
 
 process.l1tRegionDumper = cms.EDAnalyzer(
     "L1TRegionDumper",
-    UCTRegion = cms.untracked.InputTag("simCaloStage2Layer1Digis","","L1TRegionDumperTest")
+    UCTRegion = cms.untracked.InputTag("simCaloStage2Layer1Digis"),
+    scoreSource = cms.InputTag("L1TCaloSummaryCICADAv1p1p1", "CICADAScore"),
+    boostedJetCollection = cms.InputTag("L1TCaloSummaryCICADAv1p1p1", "Boosted"),
 )
+process.ntuple = cms.Path(process.l1tCaloLayer1Digis*process.simCaloStage2Layer1Digis*process.l1tRegionDumper)
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1000) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1) )
 
 process.source = cms.Source(
     "PoolSource",
     fileNames = cms.untracked.vstring(
-        'file:/eos/user/p/pdas/L1Boosted/ggHbb/DR/RunIIAutumn18DRPremix_step1_21Dec_0_5300.root'
+        'root://cms-xrd-global.cern.ch://store/data/Run2023D/ZeroBias/RAW/v1/000/369/869/00000/ebb4bfa3-c235-4534-95f5-5a83f52de1d2.root'
         #'root://cms-xrd-global.cern.ch://store/data/Run2018A/ZeroBias/RAW/v1/000/315/267/00000/FEF4A8AF-E449-E811-BF43-02163E017F01.root'
     )
 )
 
-#process.source.eventsToProcess = cms.untracked.VEventRange("1:11")
+#process.source.eventsToProcess = cms.untracked.VEventRange("369869:56300216","369869:56194154","369869:58331384","369869:58280392","369869:58340410")
 
 process.options = cms.untracked.PSet(
     
@@ -70,14 +78,11 @@ process.out = cms.OutputModule(
 #Output
 process.TFileService = cms.Service(
     "TFileService",
-    fileName = cms.string("l1TNtuple.root")
+    fileName = cms.string("output.root")
 )
 
-process.p = cms.Path(process.l1tCaloLayer1Digis*process.simCaloStage2Layer1Digis*process.l1tRegionDumper)
 
-process.e = cms.EndPath(process.out)
-
-process.schedule = cms.Schedule(process.p)
+process.schedule.append(process.ntuple)
 
 from PhysicsTools.PatAlgos.tools.helpers import associatePatAlgosToolsTask
 associatePatAlgosToolsTask(process)
@@ -86,6 +91,3 @@ associatePatAlgosToolsTask(process)
 from Configuration.StandardSequences.earlyDeleteSettings_cff import customiseEarlyDelete
 process = customiseEarlyDelete(process)
 # End adding early deletion
-
-#dump_file = open('dump.py','w')
-#dump_file.write(process.dumpPython())

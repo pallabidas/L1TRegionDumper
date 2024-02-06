@@ -3,4 +3,8 @@
 <use name="FWCore/ParameterSet"/>
 <use name="FWCore/PluginManager"/>
 <use name="CommonTools/UtilAlgos"/>
+<use name="hls"/>
+<use name="root"/>
+<use name="hls4mlEmulatorExtras"/>
+<use name="CICADA"/>
 <flags EDM_PLUGIN="1"/>

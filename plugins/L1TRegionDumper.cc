@@ -20,6 +20,8 @@
 #include <memory>
 #include <vector>
 #include <iostream>
+#include <fstream>
+#include <iomanip>
 
 // user include files
 
@@ -32,11 +34,19 @@
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "FWCore/Utilities/interface/InputTag.h"
 #include "DataFormats/L1CaloTrigger/interface/L1CaloCollections.h"
+#include "DataFormats/L1Trigger/interface/L1JetParticle.h"
+#include "DataFormats/L1Trigger/interface/L1JetParticleFwd.h"
 
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
 #include "TFile.h"
 #include "TTree.h"
+#include "TLorentzVector.h"
+#include <vector>
+#include "DataFormats/Math/interface/LorentzVector.h"
+
+#include "ap_fixed.h"
+#include "hls4ml/emulator.h"
 
 //
 // class declaration
@@ -63,11 +73,78 @@ namespace l1tcalo {
   constexpr uint32_t CrateNoShift{23};
 }  // namespace l1tcalo
 
+bool compareByPt (TLorentzVector i, TLorentzVector j) { return(i.Pt() > j.Pt()); };
+
+const ap_uint<8> ieta_lut[2][41] = {
+    {0x01, 0x03, 0x05, 0x07, 0x09, 0x0B, 0x0D, 0x0F, 0x11, 0x13, 0x15,
+     0x17, 0x19, 0x1B, 0x1D, 0x1F, 0x21, 0x23, 0x25, 0x27, 0x29, 0x2B,
+     0x2D, 0x30, 0x33, 0x37, 0x3B, 0x40, 0x00, 0x46, 0x4A, 0x4E, 0x52,
+     0x56, 0x5A, 0x5E, 0x62, 0x66, 0x6A, 0x6F, 0x72},
+    {0xFE, 0xFC, 0xFA, 0xF8, 0xF6, 0xF4, 0xF2, 0xF0, 0xEE, 0xEC, 0xEA,
+     0xE8, 0xE6, 0xE4, 0xE2, 0xE0, 0xDE, 0xDC, 0xDA, 0xD8, 0xD6, 0xD4,
+     0xD2, 0xCF, 0xCC, 0xC8, 0xC4, 0xBF, 0x00, 0xB9, 0xB5, 0xB1, 0xAD,
+     0xA9, 0xA5, 0xA1, 0x9D, 0x99, 0x95, 0x90, 0x8D}};
+
+const ap_uint<8> iphi_lut[72] = {
+    0x00, 0x02, 0x04, 0x06, 0x08, 0x0A, 0x0C, 0x0E, 0x10, 0x12, 0x14, 0x16,
+    0x18, 0x1A, 0x1C, 0x1E, 0x20, 0x22, 0x24, 0x26, 0x28, 0x2A, 0x2C, 0x2E,
+    0x30, 0x32, 0x34, 0x36, 0x38, 0x3A, 0x3C, 0x3E, 0x40, 0x42, 0x44, 0x46,
+    0x48, 0x4A, 0x4C, 0x4E, 0x50, 0x52, 0x54, 0x56, 0x58, 0x5A, 0x5C, 0x5E,
+    0x60, 0x62, 0x64, 0x66, 0x68, 0x6A, 0x6C, 0x6E, 0x70, 0x72, 0x74, 0x76,
+    0x78, 0x7A, 0x7C, 0x7E, 0x80, 0x82, 0x84, 0x86, 0x88, 0x8A, 0x8C, 0x8E};
+
+int eta_converter(float eta_value) {
+  float towerEta = 99;
+  std::array<float, 42> twrEtaValues = {{0}};
+  twrEtaValues[0] = 0;
+  for (unsigned int i = 0; i < 20; i++) {
+    twrEtaValues[i + 1] = 0.0436 + i * 0.0872;
+  }
+  twrEtaValues[21] = 1.785;
+  twrEtaValues[22] = 1.880;
+  twrEtaValues[23] = 1.9865;
+  twrEtaValues[24] = 2.1075;
+  twrEtaValues[25] = 2.247;
+  twrEtaValues[26] = 2.411;
+  twrEtaValues[27] = 2.575;
+  twrEtaValues[28] = 2.825;
+  twrEtaValues[29] = 999.;
+  twrEtaValues[30] = (3.15 + 2.98) / 2.;
+  twrEtaValues[31] = (3.33 + 3.15) / 2.;
+  twrEtaValues[32] = (3.50 + 3.33) / 2.;
+  twrEtaValues[33] = (3.68 + 3.50) / 2.;
+  twrEtaValues[34] = (3.68 + 3.85) / 2.;
+  twrEtaValues[35] = (3.85 + 4.03) / 2.;
+  twrEtaValues[36] = (4.03 + 4.20) / 2.;
+  twrEtaValues[37] = (4.20 + 4.38) / 2.;
+  twrEtaValues[38] = (4.74 + 4.38 * 3) / 4.;
+  twrEtaValues[39] = (4.38 + 4.74 * 3) / 4.;
+  twrEtaValues[40] = (5.21 + 4.74 * 3) / 4.;
+  twrEtaValues[41] = (4.74 + 5.21 * 3) / 4.;
+  for(int i = 0; i < 42; i++){
+    if(abs(eta_value) == twrEtaValues[i]) towerEta = i;
+  }
+  //if(eta_value < 0) return -int(towerEta);
+  //else return int(towerEta);
+  return int(towerEta);
+}
+
+int phi_converter(float phi_value) {
+  float towerPhi = 99;
+  if(phi_value < 0) towerPhi = (71.5 + phi_value/0.0872) + 1;
+  else towerPhi = (phi_value/0.0872 - 0.5) + 1;
+  return int(towerPhi);
+}
+
+int pt_converter(float pt_value) {
+  float jetEt = pt_value/(0.5*1.5);
+  return int(jetEt);
+}
 
 class L1TRegionDumper : public edm::one::EDAnalyzer<edm::one::SharedResources> {
 public:
   explicit L1TRegionDumper(const edm::ParameterSet&);
-  ~L1TRegionDumper() {;};
+  ~L1TRegionDumper() override;
 
   static void fillDescriptions(edm::ConfigurationDescriptions& descriptions);
 
@@ -76,15 +153,18 @@ private:
 
   // ----------member data ---------------------------
   
-  edm::EDGetTokenT<std::vector <L1CaloRegion> > regionsToken_;  //used to select what tracks to read from configuration file
+  edm::EDGetTokenT<std::vector <L1CaloRegion> > regionsToken_;
+  edm::EDGetTokenT< l1extra::L1JetParticleCollection > boostedJetToken_;
+  edm::EDGetTokenT< float > anomalyToken_;
 #ifdef THIS_IS_AN_EVENTSETUP_EXAMPLE
   edm::ESGetToken<SetupData, SetupRecord> setupToken_;
 #endif
 
   edm::Service<TFileService> fs;
 
-  TTree* efficiencyTree;
+  TTree* triggerTree;
   std::vector<uint16_t> cregions; 
+  float anomalyScore;
 
 };
 
@@ -100,10 +180,16 @@ private:
 // constructors and destructor
 //
 L1TRegionDumper::L1TRegionDumper(const edm::ParameterSet& iConfig)
-  : regionsToken_(consumes<std::vector <L1CaloRegion> >(iConfig.getUntrackedParameter<edm::InputTag>("UCTRegion"))) {
+  : regionsToken_(consumes<std::vector <L1CaloRegion> >(iConfig.getUntrackedParameter<edm::InputTag>("UCTRegion"))),
+  boostedJetToken_(consumes< l1extra::L1JetParticleCollection >(iConfig.getParameter<edm::InputTag>("boostedJetCollection"))),
+  anomalyToken_(consumes< float >(iConfig.getParameter<edm::InputTag>("scoreSource"))) {
   //now do what ever initialization is needed
-  efficiencyTree = fs->make<TTree>("efficiencyTree", "efficiencyTree");
-  efficiencyTree->Branch("cregions",     &cregions);
+  triggerTree = fs->make<TTree>("triggerTree", "triggerTree");
+  triggerTree->Branch("cregions",     &cregions);
+  triggerTree->Branch("anomalyScore", &anomalyScore);
+}
+
+L1TRegionDumper::~L1TRegionDumper() {
 }
 
 //
@@ -122,13 +208,13 @@ void L1TRegionDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& i
     uint32_t ieta = region.id().ieta() - 4; // Subtract off the offset for HF
     uint32_t iphi = region.id().iphi();
     uint16_t regionSummary = region.raw();
-    uint32_t et = region.et();
-    uint32_t location = ((regionSummary & l1tcalo::LocationBits) >> l1tcalo::LocationShift);
-    bool eleBit = !((l1tcalo::RegionEGVeto & regionSummary) == l1tcalo::RegionEGVeto);
-    bool tauBit = !((l1tcalo::RegionTauVeto & regionSummary) == l1tcalo::RegionTauVeto);
-    uint32_t hitTowerLocation = (location & 0xF);
+    //uint32_t et = region.et();
+    //uint32_t location = ((regionSummary & l1tcalo::LocationBits) >> l1tcalo::LocationShift);
+    //bool eleBit = !((l1tcalo::RegionEGVeto & regionSummary) == l1tcalo::RegionEGVeto);
+    //bool tauBit = !((l1tcalo::RegionTauVeto & regionSummary) == l1tcalo::RegionTauVeto);
+    //uint32_t hitTowerLocation = (location & 0xF);
     //regionColl[ieta][iphi] = regionSummary;
-    std::cout<<"count: "<<count<<"\t"<<"et: "<<et<<"\t"<<"ieta : "<<ieta<<"\t"<<"iphi: "<<iphi<<"\t"<<"rloc_eta: "<<((0xFFFF & regionSummary) >> 14)<<"\t"<<"rloc_phi: "<<((0x3FFF & regionSummary) >> 12)<<"\t"<<"location: "<<hitTowerLocation<<"\t"<<"eleBit: "<<eleBit<<"\t"<<"tauBit: "<<tauBit<<std::endl;
+    //std::cout<<"count: "<<count<<"\t"<<"et: "<<et<<"\t"<<"ieta : "<<ieta<<"\t"<<"iphi: "<<iphi<<"\t"<<"rloc_eta: "<<((0xFFFF & regionSummary) >> 14)<<"\t"<<"rloc_phi: "<<((0x3FFF & regionSummary) >> 12)<<"\t"<<"location: "<<hitTowerLocation<<"\t"<<"eleBit: "<<eleBit<<"\t"<<"tauBit: "<<tauBit<<std::endl;
     count++;
     //For negative eta: most significant bit is Region 0 (ieta=6) and least significant is Region 6 (ieta=0)
     //For positive eta: most significant bit is Region 6 (ieta=13) and least significant is Region 0 (ieta=7)
@@ -433,11 +519,93 @@ void L1TRegionDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& i
   //    cregions.push_back(regionColl[eta][phi]);
   //  }
   //}
+
+  uint16_t eWord[252] = {0};
+  unsigned short lines = 0;
+
   for (unsigned int ireg = 0; ireg < 252; ireg++){
     cregions.push_back(regionColl[ireg]);
+    eWord[ireg] = regionColl[ireg];
   }
 
-  efficiencyTree->Fill();
+  // Write input test vector to algoblock
+
+  std::fstream file1;
+
+  char fileName1[20];
+  sprintf(fileName1,"Regions.txt");
+  file1.open(fileName1,std::fstream::in | std::fstream::out | std::fstream::app);
+
+  for(int cyc=0; cyc<4; cyc++){
+    file1 << "0x" << std::hex << std::setfill('0') << std::setw(4) << lines << "\t";
+    for(int i=0; i<36; i++){
+      if(cyc==0) file1 << "0x" << std::hex << std::setfill('0') << std::setw(2) << (0XFF & eWord[i*7+1]) << std::setw(4) << eWord[i*7] << "00\t";
+      if(cyc==1) file1 << "0x" << std::hex << std::setfill('0') << std::setw(2) << (0XFF & eWord[i*7+3]) << std::setw(4) << eWord[i*7+2] << std::setfill('0') << std::setw(2) << ( 0xFF & (eWord[i*7+1] >> 8)) <<"\t";
+      if(cyc==2) file1 << "0x" << std::hex << std::setfill('0') << std::setw(2) << (0XFF & eWord[i*7+5]) << std::setw(4) << eWord[i*7+4] << std::setfill('0') << std::setw(2) << ( 0xFF & (eWord[i*7+3] >> 8)) <<"\t";
+      if(cyc==3) file1 << "0x00" << std::hex << std::setfill('0') << std::setw(4) << eWord[i*7+6] << std::setfill('0') << std::setw(2) << ( 0xFF & (eWord[i*7+5] >> 8)) <<"\t";
+    }
+    lines++;
+    file1 << "\n";
+  }
+
+  file1.close();
+
+  // Prepare output test vector info
+  edm::Handle< float > anomalyHandle;
+  iEvent.getByToken(anomalyToken_, anomalyHandle);
+  anomalyScore = *anomalyHandle;
+
+  ap_ufixed<16, 8> modelResult = ap_ufixed<16,8>(std::to_string(anomalyScore).c_str(), 10);
+
+  uint32_t output[6] = {0};
+  output[0] |= ((0xF & modelResult.range(12, 15)) << 28);
+  output[1] |= ((0xF & modelResult.range(8, 11)) << 28);
+  output[2] |= ((0xF & modelResult.range(4, 7)) << 28);
+  output[3] |= ((0xF & modelResult.range(0, 3)) << 28);
+
+  edm::Handle<l1extra::L1JetParticleCollection> boostedJetCollectionHandle;
+  iEvent.getByToken(boostedJetToken_, boostedJetCollectionHandle);
+  std::vector<TLorentzVector> tempJets;
+  tempJets.clear();
+ 
+  for(const l1extra::L1JetParticle& theJet: *boostedJetCollectionHandle) {
+    if(abs(theJet.eta()) < 2.4) {
+      TLorentzVector temp;
+      temp.SetPtEtaPhiE(theJet.pt(), theJet.eta(), theJet.phi(), theJet.energy());
+      tempJets.push_back(temp);
+    }
+  }
+
+  int njets = 0;
+  if(tempJets.size() > 1){  std::sort(tempJets.begin(), tempJets.end(), compareByPt);}
+  for(size_t i = 0; i < tempJets.size(); i++){
+    int jet_et = pt_converter(tempJets[i].Pt());
+    int jet_ieta = eta_converter(tempJets[i].Eta());
+    int jet_iphi = phi_converter(tempJets[i].Phi());
+    //std::cout<<"RegionDumper: "<<jet_et<<"\t"<<jet_ieta<<"\t"<<jet_iphi<<std::endl;
+    output[njets] |= (0x000007FF & jet_et);
+    if(tempJets[i].Eta() > 0) output[njets] |= ((0xFF & ieta_lut[0][jet_ieta - 1]) << 11);
+    else output[njets] |= ((0xFF & ieta_lut[1][jet_ieta - 1]) << 11);
+    output[njets] |= ((0xFF & iphi_lut[jet_iphi]) << 19);
+    njets++;
+    if(njets == 6) break;
+  }
+
+  // Write output test vector from algoblock
+
+  std::fstream file2;
+
+  char fileName2[20];
+  sprintf(fileName2,"Outputs.txt");
+  file2.open(fileName2,std::fstream::in | std::fstream::out | std::fstream::app);
+
+  for(int i = 0; i < 6; i++){
+    file2 << "0x" << std::hex << std::setfill('0') << std::setw(8) << (0XFFFFFFFF & output[i]) << std::endl;
+  }
+
+  file2.close();
+
+  triggerTree->Fill();
 
 }
 
