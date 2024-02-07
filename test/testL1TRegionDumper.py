@@ -19,6 +19,8 @@ process.GlobalTag = GlobalTag(process.GlobalTag, '130X_dataRun3_Prompt_v4', '')
 process.load('L1Trigger.Configuration.SimL1Emulator_cff')
 process.load('L1Trigger.Configuration.CaloTriggerPrimitives_cff')
 process.load('EventFilter.L1TXRawToDigi.caloLayer1Stage2Digis_cfi')
+process.load('SimCalorimetry.HcalTrigPrimProducers.hcaltpdigi_cff')
+process.load('CalibCalorimetry.CaloTPG.CaloTPGTranscoder_cfi')
 
 process.raw2digi_step = cms.Path(process.RawToDigi)
 process.endjob_step = cms.EndPath(process.endOfProcess)
@@ -37,15 +39,27 @@ process.productionTask = cms.Task(
 process.productionPath = cms.Path(process.productionTask)
 process.schedule.append(process.productionPath)
 
+process.caloDigis = cms.EDAnalyzer(
+    "Layer1Emulator",
+    hcalDigis = cms.InputTag("hcalDigis"),
+    ecalDigis = cms.InputTag("ecalDigis:EcalTriggerPrimitives"),
+    hcalValue = cms.untracked.int32(40),
+    ecalValue = cms.untracked.int32(40),
+    debug = cms.bool(False)
+)
+
+#process.uctDigiStep = cms.Path(gctDigis*gtDigis*ecalDigis*hcalDigis)
+#process.caloDigis = cms.Path(process.Layer1Digis)
+
 process.l1tRegionDumper = cms.EDAnalyzer(
     "L1TRegionDumper",
     UCTRegion = cms.untracked.InputTag("simCaloStage2Layer1Digis"),
     scoreSource = cms.InputTag("L1TCaloSummaryCICADAv1p1p1", "CICADAScore"),
     boostedJetCollection = cms.InputTag("L1TCaloSummaryCICADAv1p1p1", "Boosted"),
 )
-process.ntuple = cms.Path(process.l1tCaloLayer1Digis*process.simCaloStage2Layer1Digis*process.l1tRegionDumper)
+process.ntuple = cms.Path(process.caloDigis*process.l1tCaloLayer1Digis*process.simCaloStage2Layer1Digis*process.l1tRegionDumper)
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(10) )
 
 process.source = cms.Source(
     "PoolSource",

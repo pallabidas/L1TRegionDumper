@@ -3,6 +3,12 @@
 <use name="FWCore/ParameterSet"/>
 <use name="FWCore/PluginManager"/>
 <use name="CommonTools/UtilAlgos"/>
+<use name="DataFormats/EcalDigi"/>
+<use name="DataFormats/HcalDigi"/>
+<use name="DataFormats/L1Trigger"/>
+<use name="DataFormats/L1CaloTrigger"/>
+<use name="DataFormats/L1GlobalCaloTrigger"/>
+<use name="CalibFormats/CaloTPG"/>
 <use name="hls"/>
 <use name="root"/>
 <use name="hls4mlEmulatorExtras"/>
