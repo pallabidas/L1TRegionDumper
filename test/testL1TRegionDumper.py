@@ -32,6 +32,16 @@ associatePatAlgosToolsTask(process)
 from L1Trigger.Configuration.customiseReEmul import L1TReEmulFromRAW
 process = L1TReEmulFromRAW(process)
 
+process.l1tRegionProd = cms.EDProducer(
+    "L1TRegionProd",
+    UCTRegion = cms.untracked.InputTag("simCaloStage2Layer1Digis"),
+)
+process.l1tRegionProdTask = cms.Task(
+    process.l1tRegionProd,
+)
+process.l1tRegionProdPath = cms.Path(process.l1tRegionProdTask)
+process.schedule.append(process.l1tRegionProdPath)
+
 process.load('L1Trigger.L1TCaloLayer1.L1TCaloSummaryCICADAv1p1p1')
 process.productionTask = cms.Task(
     process.L1TCaloSummaryCICADAv1p1p1,
@@ -53,13 +63,14 @@ process.caloDigis = cms.EDAnalyzer(
 
 process.l1tRegionDumper = cms.EDAnalyzer(
     "L1TRegionDumper",
-    UCTRegion = cms.untracked.InputTag("simCaloStage2Layer1Digis"),
+    #UCTRegion = cms.untracked.InputTag("simCaloStage2Layer1Digis"),
+    UCTRegion = cms.untracked.InputTag("l1tRegionProd", "TestRegion"),
     scoreSource = cms.InputTag("L1TCaloSummaryCICADAv1p1p1", "CICADAScore"),
     boostedJetCollection = cms.InputTag("L1TCaloSummaryCICADAv1p1p1", "Boosted"),
 )
 process.ntuple = cms.Path(process.caloDigis*process.l1tCaloLayer1Digis*process.simCaloStage2Layer1Digis*process.l1tRegionDumper)
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(10) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(256) )
 
 process.source = cms.Source(
     "PoolSource",
@@ -88,13 +99,14 @@ process.out = cms.OutputModule(
     outputCommands = cms.untracked.vstring('drop *')
 )
 
+process.end = cms.EndPath(process.out)
+#process.schedule.append(process.end)
 
 #Output
 process.TFileService = cms.Service(
     "TFileService",
     fileName = cms.string("output.root")
 )
-
 
 process.schedule.append(process.ntuple)
 

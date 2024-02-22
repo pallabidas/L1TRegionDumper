@@ -30,7 +30,7 @@ make
 cd ../
 git clone git@github.com:pallabidas/L1TRegionDumper.git -b top_master
 
-cd ../../
+cd ../
 
 scram b -j 12
 
