@@ -150,6 +150,7 @@ public:
 
 private:
   void analyze(const edm::Event&, const edm::EventSetup&) override;
+  int readCount_;
 
   // ----------member data ---------------------------
   
@@ -180,7 +181,8 @@ private:
 // constructors and destructor
 //
 L1TRegionDumper::L1TRegionDumper(const edm::ParameterSet& iConfig)
-  : regionsToken_(consumes<std::vector <L1CaloRegion> >(iConfig.getUntrackedParameter<edm::InputTag>("UCTRegion"))),
+  : readCount_(0),
+  regionsToken_(consumes<std::vector <L1CaloRegion> >(iConfig.getUntrackedParameter<edm::InputTag>("UCTRegion"))),
   boostedJetToken_(consumes< l1extra::L1JetParticleCollection >(iConfig.getParameter<edm::InputTag>("boostedJetCollection"))),
   anomalyToken_(consumes< float >(iConfig.getParameter<edm::InputTag>("scoreSource"))) {
   //now do what ever initialization is needed
@@ -203,6 +205,7 @@ void L1TRegionDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& i
   //uint16_t regionColl[14][18];
   uint16_t regionColl[252];
   int count=0;
+  //std::cout<<"readCount_: "<<readCount_<<std::endl;
 
   for (const auto& region : iEvent.get(regionsToken_)) {
     uint32_t ieta = region.id().ieta() - 4; // Subtract off the offset for HF
@@ -521,7 +524,7 @@ void L1TRegionDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& i
   //}
 
   uint16_t eWord[252] = {0};
-  unsigned short lines = 0;
+  unsigned short lines = 4*readCount_;
 
   for (unsigned int ireg = 0; ireg < 252; ireg++){
     cregions.push_back(regionColl[ireg]);
@@ -606,6 +609,7 @@ void L1TRegionDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& i
   file2.close();
 
   triggerTree->Fill();
+  ++readCount_;
 
 }
 
