@@ -204,6 +204,7 @@ void L1TRegionDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& i
   cregions.clear();
   //uint16_t regionColl[14][18];
   uint16_t regionColl[252];
+  uint16_t regionColl_input[252];
   int count=0;
   //std::cout<<"readCount_: "<<readCount_<<std::endl;
 
@@ -226,293 +227,293 @@ void L1TRegionDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& i
     //If we make ieta=7 at Region 6, it will be put in the least significant bit position and ieta=13 will be put at most significant bit position
 
     //BRAM 1
-    if(iphi==15 && ieta==13) regionColl[0] = regionSummary;
-    if(iphi==15 && ieta==12) regionColl[1] = regionSummary;
-    if(iphi==15 && ieta==11) regionColl[2] = regionSummary;
-    if(iphi==15 && ieta==10) regionColl[3] = regionSummary;
-    if(iphi==15 && ieta==9) regionColl[4] = regionSummary;
-    if(iphi==15 && ieta==8) regionColl[5] = regionSummary;
-    if(iphi==15 && ieta==7) regionColl[6] = regionSummary;
+    if(iphi==15 && ieta==13) { regionColl[0] = regionSummary;  regionColl_input[217] = regionSummary; }
+    if(iphi==15 && ieta==12) { regionColl[1] = regionSummary; regionColl_input[218] = regionSummary; }
+    if(iphi==15 && ieta==11) { regionColl[2] = regionSummary; regionColl_input[219] = regionSummary; }
+    if(iphi==15 && ieta==10) { regionColl[3] = regionSummary; regionColl_input[220] = regionSummary; }
+    if(iphi==15 && ieta==9) { regionColl[4] = regionSummary; regionColl_input[221] = regionSummary; }
+    if(iphi==15 && ieta==8) { regionColl[5] = regionSummary; regionColl_input[222] = regionSummary; }
+    if(iphi==15 && ieta==7) { regionColl[6] = regionSummary; regionColl_input[223] = regionSummary; }
     //BRAM 2
-    if(iphi==15 && ieta==6) regionColl[7] = regionSummary;
-    if(iphi==15 && ieta==5) regionColl[8] = regionSummary;
-    if(iphi==15 && ieta==4) regionColl[9] = regionSummary;
-    if(iphi==15 && ieta==3) regionColl[10] = regionSummary;
-    if(iphi==15 && ieta==2) regionColl[11] = regionSummary;
-    if(iphi==15 && ieta==1) regionColl[12] = regionSummary;
-    if(iphi==15 && ieta==0) regionColl[13] = regionSummary;
+    if(iphi==15 && ieta==6) { regionColl[7] = regionSummary; regionColl_input[210] = regionSummary; }
+    if(iphi==15 && ieta==5) { regionColl[8] = regionSummary; regionColl_input[211] = regionSummary; }
+    if(iphi==15 && ieta==4) { regionColl[9] = regionSummary; regionColl_input[212] = regionSummary; }
+    if(iphi==15 && ieta==3) { regionColl[10] = regionSummary; regionColl_input[213] = regionSummary; }
+    if(iphi==15 && ieta==2) { regionColl[11] = regionSummary; regionColl_input[214] = regionSummary; }
+    if(iphi==15 && ieta==1) { regionColl[12] = regionSummary; regionColl_input[215] = regionSummary; }
+    if(iphi==15 && ieta==0) { regionColl[13] = regionSummary; regionColl_input[216] = regionSummary; }
     //BRAM 3
-    if(iphi==0 && ieta==6) regionColl[14] = regionSummary;
-    if(iphi==0 && ieta==5) regionColl[15] = regionSummary;
-    if(iphi==0 && ieta==4) regionColl[16] = regionSummary;
-    if(iphi==0 && ieta==3) regionColl[17] = regionSummary;
-    if(iphi==0 && ieta==2) regionColl[18] = regionSummary;
-    if(iphi==0 && ieta==1) regionColl[19] = regionSummary;
-    if(iphi==0 && ieta==0) regionColl[20] = regionSummary;
+    if(iphi==0 && ieta==6) { regionColl[14] = regionSummary; regionColl_input[0] = regionSummary; }
+    if(iphi==0 && ieta==5) { regionColl[15] = regionSummary; regionColl_input[1] = regionSummary; }
+    if(iphi==0 && ieta==4) { regionColl[16] = regionSummary; regionColl_input[2] = regionSummary; }
+    if(iphi==0 && ieta==3) { regionColl[17] = regionSummary; regionColl_input[3] = regionSummary; }
+    if(iphi==0 && ieta==2) { regionColl[18] = regionSummary; regionColl_input[4] = regionSummary; }
+    if(iphi==0 && ieta==1) { regionColl[19] = regionSummary; regionColl_input[5] = regionSummary; }
+    if(iphi==0 && ieta==0) { regionColl[20] = regionSummary; regionColl_input[6] = regionSummary; }
     //BRAM 4
-    if(iphi==0 && ieta==13) regionColl[21] = regionSummary;
-    if(iphi==0 && ieta==12) regionColl[22] = regionSummary;
-    if(iphi==0 && ieta==11) regionColl[23] = regionSummary;
-    if(iphi==0 && ieta==10) regionColl[24] = regionSummary;
-    if(iphi==0 && ieta==9) regionColl[25] = regionSummary;
-    if(iphi==0 && ieta==8) regionColl[26] = regionSummary;
-    if(iphi==0 && ieta==7) regionColl[27] = regionSummary;
+    if(iphi==0 && ieta==13) { regionColl[21] = regionSummary; regionColl_input[7] = regionSummary; }
+    if(iphi==0 && ieta==12) { regionColl[22] = regionSummary; regionColl_input[8] = regionSummary; }
+    if(iphi==0 && ieta==11) { regionColl[23] = regionSummary; regionColl_input[9] = regionSummary; }
+    if(iphi==0 && ieta==10) { regionColl[24] = regionSummary; regionColl_input[10] = regionSummary; }
+    if(iphi==0 && ieta==9) { regionColl[25] = regionSummary; regionColl_input[11] = regionSummary; }
+    if(iphi==0 && ieta==8) { regionColl[26] = regionSummary; regionColl_input[12] = regionSummary; }
+    if(iphi==0 && ieta==7) { regionColl[27] = regionSummary; regionColl_input[13] = regionSummary; }
     //BRAM 5
-    if(iphi==1 && ieta==6) regionColl[28] = regionSummary;
-    if(iphi==1 && ieta==5) regionColl[29] = regionSummary;
-    if(iphi==1 && ieta==4) regionColl[30] = regionSummary;
-    if(iphi==1 && ieta==3) regionColl[31] = regionSummary;
-    if(iphi==1 && ieta==2) regionColl[32] = regionSummary;
-    if(iphi==1 && ieta==1) regionColl[33] = regionSummary;
-    if(iphi==1 && ieta==0) regionColl[34] = regionSummary;
+    if(iphi==1 && ieta==6) { regionColl[28] = regionSummary; regionColl_input[14] = regionSummary; }
+    if(iphi==1 && ieta==5) { regionColl[29] = regionSummary; regionColl_input[15] = regionSummary; }
+    if(iphi==1 && ieta==4) { regionColl[30] = regionSummary; regionColl_input[16] = regionSummary; }
+    if(iphi==1 && ieta==3) { regionColl[31] = regionSummary; regionColl_input[17] = regionSummary; }
+    if(iphi==1 && ieta==2) { regionColl[32] = regionSummary; regionColl_input[18] = regionSummary; }
+    if(iphi==1 && ieta==1) { regionColl[33] = regionSummary; regionColl_input[19] = regionSummary; }
+    if(iphi==1 && ieta==0) { regionColl[34] = regionSummary; regionColl_input[20] = regionSummary; }
     //BRAM 6
-    if(iphi==1 && ieta==13) regionColl[35] = regionSummary;
-    if(iphi==1 && ieta==12) regionColl[36] = regionSummary;
-    if(iphi==1 && ieta==11) regionColl[37] = regionSummary;
-    if(iphi==1 && ieta==10) regionColl[38] = regionSummary;
-    if(iphi==1 && ieta==9) regionColl[39] = regionSummary;
-    if(iphi==1 && ieta==8) regionColl[40] = regionSummary;
-    if(iphi==1 && ieta==7) regionColl[41] = regionSummary;
+    if(iphi==1 && ieta==13) { regionColl[35] = regionSummary; regionColl_input[21] = regionSummary; }
+    if(iphi==1 && ieta==12) { regionColl[36] = regionSummary; regionColl_input[22] = regionSummary; }
+    if(iphi==1 && ieta==11) { regionColl[37] = regionSummary; regionColl_input[23] = regionSummary; }
+    if(iphi==1 && ieta==10) { regionColl[38] = regionSummary; regionColl_input[24] = regionSummary; }
+    if(iphi==1 && ieta==9) { regionColl[39] = regionSummary; regionColl_input[25] = regionSummary; }
+    if(iphi==1 && ieta==8) { regionColl[40] = regionSummary; regionColl_input[26] = regionSummary; }
+    if(iphi==1 && ieta==7) { regionColl[41] = regionSummary; regionColl_input[27] = regionSummary; }
     //BRAM 7
-    if(iphi==2 && ieta==6) regionColl[42] = regionSummary;
-    if(iphi==2 && ieta==5) regionColl[43] = regionSummary;
-    if(iphi==2 && ieta==4) regionColl[44] = regionSummary;
-    if(iphi==2 && ieta==3) regionColl[45] = regionSummary;
-    if(iphi==2 && ieta==2) regionColl[46] = regionSummary;
-    if(iphi==2 && ieta==1) regionColl[47] = regionSummary;
-    if(iphi==2 && ieta==0) regionColl[48] = regionSummary;
+    if(iphi==2 && ieta==6) { regionColl[42] = regionSummary; regionColl_input[28] = regionSummary; }
+    if(iphi==2 && ieta==5) { regionColl[43] = regionSummary; regionColl_input[29] = regionSummary; }
+    if(iphi==2 && ieta==4) { regionColl[44] = regionSummary; regionColl_input[30] = regionSummary; }
+    if(iphi==2 && ieta==3) { regionColl[45] = regionSummary; regionColl_input[31] = regionSummary; }
+    if(iphi==2 && ieta==2) { regionColl[46] = regionSummary; regionColl_input[32] = regionSummary; }
+    if(iphi==2 && ieta==1) { regionColl[47] = regionSummary; regionColl_input[33] = regionSummary; }
+    if(iphi==2 && ieta==0) { regionColl[48] = regionSummary; regionColl_input[34] = regionSummary; }
     //BRAM 8
-    if(iphi==2 && ieta==13) regionColl[49] = regionSummary;
-    if(iphi==2 && ieta==12) regionColl[50] = regionSummary;
-    if(iphi==2 && ieta==11) regionColl[51] = regionSummary;
-    if(iphi==2 && ieta==10) regionColl[52] = regionSummary;
-    if(iphi==2 && ieta==9) regionColl[53] = regionSummary;
-    if(iphi==2 && ieta==8) regionColl[54] = regionSummary;
-    if(iphi==2 && ieta==7) regionColl[55] = regionSummary;
+    if(iphi==2 && ieta==13) { regionColl[49] = regionSummary; regionColl_input[35] = regionSummary; }
+    if(iphi==2 && ieta==12) { regionColl[50] = regionSummary; regionColl_input[36] = regionSummary; }
+    if(iphi==2 && ieta==11) { regionColl[51] = regionSummary; regionColl_input[37] = regionSummary; }
+    if(iphi==2 && ieta==10) { regionColl[52] = regionSummary; regionColl_input[38] = regionSummary; }
+    if(iphi==2 && ieta==9) { regionColl[53] = regionSummary; regionColl_input[39] = regionSummary; }
+    if(iphi==2 && ieta==8) { regionColl[54] = regionSummary; regionColl_input[40] = regionSummary; }
+    if(iphi==2 && ieta==7) { regionColl[55] = regionSummary; regionColl_input[41] = regionSummary; }
     //BRAM 9
-    if(iphi==17 && ieta==6) regionColl[56] = regionSummary;
-    if(iphi==17 && ieta==5) regionColl[57] = regionSummary;
-    if(iphi==17 && ieta==4) regionColl[58] = regionSummary;
-    if(iphi==17 && ieta==3) regionColl[59] = regionSummary;
-    if(iphi==17 && ieta==2) regionColl[60] = regionSummary;
-    if(iphi==17 && ieta==1) regionColl[61] = regionSummary;
-    if(iphi==17 && ieta==0) regionColl[62] = regionSummary;
+    if(iphi==17 && ieta==6) { regionColl[56] = regionSummary; regionColl_input[238] = regionSummary; }
+    if(iphi==17 && ieta==5) { regionColl[57] = regionSummary; regionColl_input[239] = regionSummary; }
+    if(iphi==17 && ieta==4) { regionColl[58] = regionSummary; regionColl_input[240] = regionSummary; }
+    if(iphi==17 && ieta==3) { regionColl[59] = regionSummary; regionColl_input[241] = regionSummary; }
+    if(iphi==17 && ieta==2) { regionColl[60] = regionSummary; regionColl_input[242] = regionSummary; }
+    if(iphi==17 && ieta==1) { regionColl[61] = regionSummary; regionColl_input[243] = regionSummary; }
+    if(iphi==17 && ieta==0) { regionColl[62] = regionSummary; regionColl_input[244] = regionSummary; }
     //BRAM 10
-    if(iphi==17 && ieta==13) regionColl[63] = regionSummary;
-    if(iphi==17 && ieta==12) regionColl[64] = regionSummary;
-    if(iphi==17 && ieta==11) regionColl[65] = regionSummary;
-    if(iphi==17 && ieta==10) regionColl[66] = regionSummary;
-    if(iphi==17 && ieta==9) regionColl[67] = regionSummary;
-    if(iphi==17 && ieta==8) regionColl[68] = regionSummary;
-    if(iphi==17 && ieta==7) regionColl[69] = regionSummary;
+    if(iphi==17 && ieta==13) { regionColl[63] = regionSummary; regionColl_input[245] = regionSummary; }
+    if(iphi==17 && ieta==12) { regionColl[64] = regionSummary; regionColl_input[246] = regionSummary; }
+    if(iphi==17 && ieta==11) { regionColl[65] = regionSummary; regionColl_input[247] = regionSummary; }
+    if(iphi==17 && ieta==10) { regionColl[66] = regionSummary; regionColl_input[248] = regionSummary; }
+    if(iphi==17 && ieta==9) { regionColl[67] = regionSummary; regionColl_input[249] = regionSummary; }
+    if(iphi==17 && ieta==8) { regionColl[68] = regionSummary; regionColl_input[250] = regionSummary; }
+    if(iphi==17 && ieta==7) { regionColl[69] = regionSummary; regionColl_input[251] = regionSummary; }
     //BRAM 11
-    if(iphi==16 && ieta==6) regionColl[70] = regionSummary;
-    if(iphi==16 && ieta==5) regionColl[71] = regionSummary;
-    if(iphi==16 && ieta==4) regionColl[72] = regionSummary;
-    if(iphi==16 && ieta==3) regionColl[73] = regionSummary;
-    if(iphi==16 && ieta==2) regionColl[74] = regionSummary;
-    if(iphi==16 && ieta==1) regionColl[75] = regionSummary;
-    if(iphi==16 && ieta==0) regionColl[76] = regionSummary;
+    if(iphi==16 && ieta==6) { regionColl[70] = regionSummary; regionColl_input[224] = regionSummary; }
+    if(iphi==16 && ieta==5) { regionColl[71] = regionSummary; regionColl_input[225] = regionSummary; }
+    if(iphi==16 && ieta==4) { regionColl[72] = regionSummary; regionColl_input[226] = regionSummary; }
+    if(iphi==16 && ieta==3) { regionColl[73] = regionSummary; regionColl_input[227] = regionSummary; }
+    if(iphi==16 && ieta==2) { regionColl[74] = regionSummary; regionColl_input[228] = regionSummary; }
+    if(iphi==16 && ieta==1) { regionColl[75] = regionSummary; regionColl_input[229] = regionSummary; }
+    if(iphi==16 && ieta==0) { regionColl[76] = regionSummary; regionColl_input[230] = regionSummary; }
     //BRAM 12
-    if(iphi==16 && ieta==13) regionColl[77] = regionSummary;
-    if(iphi==16 && ieta==12) regionColl[78] = regionSummary;
-    if(iphi==16 && ieta==11) regionColl[79] = regionSummary;
-    if(iphi==16 && ieta==10) regionColl[80] = regionSummary;
-    if(iphi==16 && ieta==9) regionColl[81] = regionSummary;
-    if(iphi==16 && ieta==8) regionColl[82] = regionSummary;
-    if(iphi==16 && ieta==7) regionColl[83] = regionSummary;
+    if(iphi==16 && ieta==13) { regionColl[77] = regionSummary; regionColl_input[231] = regionSummary; }
+    if(iphi==16 && ieta==12) { regionColl[78] = regionSummary; regionColl_input[232] = regionSummary; }
+    if(iphi==16 && ieta==11) { regionColl[79] = regionSummary; regionColl_input[233] = regionSummary; }
+    if(iphi==16 && ieta==10) { regionColl[80] = regionSummary; regionColl_input[234] = regionSummary; }
+    if(iphi==16 && ieta==9) { regionColl[81] = regionSummary; regionColl_input[235] = regionSummary; }
+    if(iphi==16 && ieta==8) { regionColl[82] = regionSummary; regionColl_input[236] = regionSummary; }
+    if(iphi==16 && ieta==7) { regionColl[83] = regionSummary; regionColl_input[237] = regionSummary; }
     //BRAM 13
-    if(iphi==9 && ieta==13) regionColl[84] = regionSummary;
-    if(iphi==9 && ieta==12) regionColl[85] = regionSummary;
-    if(iphi==9 && ieta==11) regionColl[86] = regionSummary;
-    if(iphi==9 && ieta==10) regionColl[87] = regionSummary;
-    if(iphi==9 && ieta==9) regionColl[88] = regionSummary;
-    if(iphi==9 && ieta==8) regionColl[89] = regionSummary;
-    if(iphi==9 && ieta==7) regionColl[90] = regionSummary;
+    if(iphi==9 && ieta==13) { regionColl[84] = regionSummary; regionColl_input[133] = regionSummary; }
+    if(iphi==9 && ieta==12) { regionColl[85] = regionSummary; regionColl_input[134] = regionSummary; }
+    if(iphi==9 && ieta==11) { regionColl[86] = regionSummary; regionColl_input[135] = regionSummary; }
+    if(iphi==9 && ieta==10) { regionColl[87] = regionSummary; regionColl_input[136] = regionSummary; }
+    if(iphi==9 && ieta==9) { regionColl[88] = regionSummary; regionColl_input[137] = regionSummary; }
+    if(iphi==9 && ieta==8) { regionColl[89] = regionSummary; regionColl_input[138] = regionSummary; }
+    if(iphi==9 && ieta==7) { regionColl[90] = regionSummary; regionColl_input[139] = regionSummary; }
     //BRAM 14
-    if(iphi==9 && ieta==6) regionColl[91] = regionSummary;
-    if(iphi==9 && ieta==5) regionColl[92] = regionSummary;
-    if(iphi==9 && ieta==4) regionColl[93] = regionSummary;
-    if(iphi==9 && ieta==3) regionColl[94] = regionSummary;
-    if(iphi==9 && ieta==2) regionColl[95] = regionSummary;
-    if(iphi==9 && ieta==1) regionColl[96] = regionSummary;
-    if(iphi==9 && ieta==0) regionColl[97] = regionSummary;
+    if(iphi==9 && ieta==6) { regionColl[91] = regionSummary; regionColl_input[126] = regionSummary; }
+    if(iphi==9 && ieta==5) { regionColl[92] = regionSummary; regionColl_input[127] = regionSummary; }
+    if(iphi==9 && ieta==4) { regionColl[93] = regionSummary; regionColl_input[128] = regionSummary; }
+    if(iphi==9 && ieta==3) { regionColl[94] = regionSummary; regionColl_input[129] = regionSummary; }
+    if(iphi==9 && ieta==2) { regionColl[95] = regionSummary; regionColl_input[130] = regionSummary; }
+    if(iphi==9 && ieta==1) { regionColl[96] = regionSummary; regionColl_input[131] = regionSummary; }
+    if(iphi==9 && ieta==0) { regionColl[97] = regionSummary; regionColl_input[132] = regionSummary; }
     //BRAM 15
-    if(iphi==12 && ieta==6) regionColl[98] = regionSummary;
-    if(iphi==12 && ieta==5) regionColl[99] = regionSummary;
-    if(iphi==12 && ieta==4) regionColl[100] = regionSummary;
-    if(iphi==12 && ieta==3) regionColl[101] = regionSummary;
-    if(iphi==12 && ieta==2) regionColl[102] = regionSummary;
-    if(iphi==12 && ieta==1) regionColl[103] = regionSummary;
-    if(iphi==12 && ieta==0) regionColl[104] = regionSummary;
+    if(iphi==12 && ieta==6) { regionColl[98] = regionSummary; regionColl_input[168] = regionSummary; }
+    if(iphi==12 && ieta==5) { regionColl[99] = regionSummary; regionColl_input[169] = regionSummary; }
+    if(iphi==12 && ieta==4) { regionColl[100] = regionSummary; regionColl_input[170] = regionSummary; }
+    if(iphi==12 && ieta==3) { regionColl[101] = regionSummary; regionColl_input[171] = regionSummary; }
+    if(iphi==12 && ieta==2) { regionColl[102] = regionSummary; regionColl_input[172] = regionSummary; }
+    if(iphi==12 && ieta==1) { regionColl[103] = regionSummary; regionColl_input[173] = regionSummary; }
+    if(iphi==12 && ieta==0) { regionColl[104] = regionSummary; regionColl_input[174] = regionSummary; }
     //BRAM 16
-    if(iphi==12 && ieta==13) regionColl[105] = regionSummary;
-    if(iphi==12 && ieta==12) regionColl[106] = regionSummary;
-    if(iphi==12 && ieta==11) regionColl[107] = regionSummary;
-    if(iphi==12 && ieta==10) regionColl[108] = regionSummary;
-    if(iphi==12 && ieta==9) regionColl[109] = regionSummary;
-    if(iphi==12 && ieta==8) regionColl[110] = regionSummary;
-    if(iphi==12 && ieta==7) regionColl[111] = regionSummary;
+    if(iphi==12 && ieta==13) { regionColl[105] = regionSummary; regionColl_input[175] = regionSummary; }
+    if(iphi==12 && ieta==12) { regionColl[106] = regionSummary; regionColl_input[176] = regionSummary; }
+    if(iphi==12 && ieta==11) { regionColl[107] = regionSummary; regionColl_input[177] = regionSummary; }
+    if(iphi==12 && ieta==10) { regionColl[108] = regionSummary; regionColl_input[178] = regionSummary; }
+    if(iphi==12 && ieta==9) { regionColl[109] = regionSummary; regionColl_input[179] = regionSummary; }
+    if(iphi==12 && ieta==8) { regionColl[110] = regionSummary; regionColl_input[180] = regionSummary; }
+    if(iphi==12 && ieta==7) { regionColl[111] = regionSummary; regionColl_input[181] = regionSummary; }
     //BRAM 17
-    if(iphi==13 && ieta==6) regionColl[112] = regionSummary;
-    if(iphi==13 && ieta==5) regionColl[113] = regionSummary;
-    if(iphi==13 && ieta==4) regionColl[114] = regionSummary;
-    if(iphi==13 && ieta==3) regionColl[115] = regionSummary;
-    if(iphi==13 && ieta==2) regionColl[116] = regionSummary;
-    if(iphi==13 && ieta==1) regionColl[117] = regionSummary;
-    if(iphi==13 && ieta==0) regionColl[118] = regionSummary;
+    if(iphi==13 && ieta==6) { regionColl[112] = regionSummary; regionColl_input[182] = regionSummary; }
+    if(iphi==13 && ieta==5) { regionColl[113] = regionSummary; regionColl_input[183] = regionSummary; }
+    if(iphi==13 && ieta==4) { regionColl[114] = regionSummary; regionColl_input[184] = regionSummary; }
+    if(iphi==13 && ieta==3) { regionColl[115] = regionSummary; regionColl_input[185] = regionSummary; }
+    if(iphi==13 && ieta==2) { regionColl[116] = regionSummary; regionColl_input[186] = regionSummary; }
+    if(iphi==13 && ieta==1) { regionColl[117] = regionSummary; regionColl_input[187] = regionSummary; }
+    if(iphi==13 && ieta==0) { regionColl[118] = regionSummary; regionColl_input[188] = regionSummary; }
     //BRAM 18
-    if(iphi==13 && ieta==13) regionColl[119] = regionSummary;
-    if(iphi==13 && ieta==12) regionColl[120] = regionSummary;
-    if(iphi==13 && ieta==11) regionColl[121] = regionSummary;
-    if(iphi==13 && ieta==10) regionColl[122] = regionSummary;
-    if(iphi==13 && ieta==9) regionColl[123] = regionSummary;
-    if(iphi==13 && ieta==8) regionColl[124] = regionSummary;
-    if(iphi==13 && ieta==7) regionColl[125] = regionSummary;
+    if(iphi==13 && ieta==13) { regionColl[119] = regionSummary; regionColl_input[189] = regionSummary; }
+    if(iphi==13 && ieta==12) { regionColl[120] = regionSummary; regionColl_input[190] = regionSummary; }
+    if(iphi==13 && ieta==11) { regionColl[121] = regionSummary; regionColl_input[191] = regionSummary; }
+    if(iphi==13 && ieta==10) { regionColl[122] = regionSummary; regionColl_input[192] = regionSummary; }
+    if(iphi==13 && ieta==9) { regionColl[123] = regionSummary; regionColl_input[193] = regionSummary; }
+    if(iphi==13 && ieta==8) { regionColl[124] = regionSummary; regionColl_input[194] = regionSummary; }
+    if(iphi==13 && ieta==7) { regionColl[125] = regionSummary; regionColl_input[195] = regionSummary; }
     //BRAM 19
-    if(iphi==14 && ieta==6) regionColl[126] = regionSummary;
-    if(iphi==14 && ieta==5) regionColl[127] = regionSummary;
-    if(iphi==14 && ieta==4) regionColl[128] = regionSummary;
-    if(iphi==14 && ieta==3) regionColl[129] = regionSummary;
-    if(iphi==14 && ieta==2) regionColl[130] = regionSummary;
-    if(iphi==14 && ieta==1) regionColl[131] = regionSummary;
-    if(iphi==14 && ieta==0) regionColl[132] = regionSummary;
+    if(iphi==14 && ieta==6) { regionColl[126] = regionSummary; regionColl_input[196] = regionSummary; }
+    if(iphi==14 && ieta==5) { regionColl[127] = regionSummary; regionColl_input[197] = regionSummary; }
+    if(iphi==14 && ieta==4) { regionColl[128] = regionSummary; regionColl_input[198] = regionSummary; }
+    if(iphi==14 && ieta==3) { regionColl[129] = regionSummary; regionColl_input[199] = regionSummary; }
+    if(iphi==14 && ieta==2) { regionColl[130] = regionSummary; regionColl_input[200] = regionSummary; }
+    if(iphi==14 && ieta==1) { regionColl[131] = regionSummary; regionColl_input[201] = regionSummary; }
+    if(iphi==14 && ieta==0) { regionColl[132] = regionSummary; regionColl_input[202] = regionSummary; }
     //BRAM 20
-    if(iphi==14 && ieta==13) regionColl[133] = regionSummary;
-    if(iphi==14 && ieta==12) regionColl[134] = regionSummary;
-    if(iphi==14 && ieta==11) regionColl[135] = regionSummary;
-    if(iphi==14 && ieta==10) regionColl[136] = regionSummary;
-    if(iphi==14 && ieta==9) regionColl[137] = regionSummary;
-    if(iphi==14 && ieta==8) regionColl[138] = regionSummary;
-    if(iphi==14 && ieta==7) regionColl[139] = regionSummary;
+    if(iphi==14 && ieta==13) { regionColl[133] = regionSummary; regionColl_input[203] = regionSummary; }
+    if(iphi==14 && ieta==12) { regionColl[134] = regionSummary; regionColl_input[204] = regionSummary; }
+    if(iphi==14 && ieta==11) { regionColl[135] = regionSummary; regionColl_input[205] = regionSummary; }
+    if(iphi==14 && ieta==10) { regionColl[136] = regionSummary; regionColl_input[206] = regionSummary; }
+    if(iphi==14 && ieta==9) { regionColl[137] = regionSummary; regionColl_input[207] = regionSummary; }
+    if(iphi==14 && ieta==8) { regionColl[138] = regionSummary; regionColl_input[208] = regionSummary; }
+    if(iphi==14 && ieta==7) { regionColl[139] = regionSummary; regionColl_input[209] = regionSummary; }
     //BRAM 21
-    if(iphi==11 && ieta==6) regionColl[140] = regionSummary;
-    if(iphi==11 && ieta==5) regionColl[141] = regionSummary;
-    if(iphi==11 && ieta==4) regionColl[142] = regionSummary;
-    if(iphi==11 && ieta==3) regionColl[143] = regionSummary;
-    if(iphi==11 && ieta==2) regionColl[144] = regionSummary;
-    if(iphi==11 && ieta==1) regionColl[145] = regionSummary;
-    if(iphi==11 && ieta==0) regionColl[146] = regionSummary;
+    if(iphi==11 && ieta==6) { regionColl[140] = regionSummary; regionColl_input[154] = regionSummary; }
+    if(iphi==11 && ieta==5) { regionColl[141] = regionSummary; regionColl_input[155] = regionSummary; }
+    if(iphi==11 && ieta==4) { regionColl[142] = regionSummary; regionColl_input[156] = regionSummary; }
+    if(iphi==11 && ieta==3) { regionColl[143] = regionSummary; regionColl_input[157] = regionSummary; }
+    if(iphi==11 && ieta==2) { regionColl[144] = regionSummary; regionColl_input[158] = regionSummary; }
+    if(iphi==11 && ieta==1) { regionColl[145] = regionSummary; regionColl_input[159] = regionSummary; }
+    if(iphi==11 && ieta==0) { regionColl[146] = regionSummary; regionColl_input[160] = regionSummary; }
     //BRAM 22
-    if(iphi==11 && ieta==13) regionColl[147] = regionSummary;
-    if(iphi==11 && ieta==12) regionColl[148] = regionSummary;
-    if(iphi==11 && ieta==11) regionColl[149] = regionSummary;
-    if(iphi==11 && ieta==10) regionColl[150] = regionSummary;
-    if(iphi==11 && ieta==9) regionColl[151] = regionSummary;
-    if(iphi==11 && ieta==8) regionColl[152] = regionSummary;
-    if(iphi==11 && ieta==7) regionColl[153] = regionSummary;
+    if(iphi==11 && ieta==13) { regionColl[147] = regionSummary; regionColl_input[161] = regionSummary; }
+    if(iphi==11 && ieta==12) { regionColl[148] = regionSummary; regionColl_input[162] = regionSummary; }
+    if(iphi==11 && ieta==11) { regionColl[149] = regionSummary; regionColl_input[163] = regionSummary; }
+    if(iphi==11 && ieta==10) { regionColl[150] = regionSummary; regionColl_input[164] = regionSummary; }
+    if(iphi==11 && ieta==9) { regionColl[151] = regionSummary; regionColl_input[165] = regionSummary; }
+    if(iphi==11 && ieta==8) { regionColl[152] = regionSummary; regionColl_input[166] = regionSummary; }
+    if(iphi==11 && ieta==7) { regionColl[153] = regionSummary; regionColl_input[167] = regionSummary; }
     //BRAM 23
-    if(iphi==10 && ieta==6) regionColl[154] = regionSummary;
-    if(iphi==10 && ieta==5) regionColl[155] = regionSummary;
-    if(iphi==10 && ieta==4) regionColl[156] = regionSummary;
-    if(iphi==10 && ieta==3) regionColl[157] = regionSummary;
-    if(iphi==10 && ieta==2) regionColl[158] = regionSummary;
-    if(iphi==10 && ieta==1) regionColl[159] = regionSummary;
-    if(iphi==10 && ieta==0) regionColl[160] = regionSummary;
+    if(iphi==10 && ieta==6) { regionColl[154] = regionSummary; regionColl_input[140] = regionSummary; }
+    if(iphi==10 && ieta==5) { regionColl[155] = regionSummary; regionColl_input[141] = regionSummary; }
+    if(iphi==10 && ieta==4) { regionColl[156] = regionSummary; regionColl_input[142] = regionSummary; }
+    if(iphi==10 && ieta==3) { regionColl[157] = regionSummary; regionColl_input[143] = regionSummary; }
+    if(iphi==10 && ieta==2) { regionColl[158] = regionSummary; regionColl_input[144] = regionSummary; }
+    if(iphi==10 && ieta==1) { regionColl[159] = regionSummary; regionColl_input[145] = regionSummary; }
+    if(iphi==10 && ieta==0) { regionColl[160] = regionSummary; regionColl_input[146] = regionSummary; }
     //BRAM 24
-    if(iphi==10 && ieta==13) regionColl[161] = regionSummary;
-    if(iphi==10 && ieta==12) regionColl[162] = regionSummary;
-    if(iphi==10 && ieta==11) regionColl[163] = regionSummary;
-    if(iphi==10 && ieta==10) regionColl[164] = regionSummary;
-    if(iphi==10 && ieta==9) regionColl[165] = regionSummary;
-    if(iphi==10 && ieta==8) regionColl[166] = regionSummary;
-    if(iphi==10 && ieta==7) regionColl[167] = regionSummary;
+    if(iphi==10 && ieta==13) { regionColl[161] = regionSummary; regionColl_input[147] = regionSummary; }
+    if(iphi==10 && ieta==12) { regionColl[162] = regionSummary; regionColl_input[148] = regionSummary; }
+    if(iphi==10 && ieta==11) { regionColl[163] = regionSummary; regionColl_input[149] = regionSummary; }
+    if(iphi==10 && ieta==10) { regionColl[164] = regionSummary; regionColl_input[150] = regionSummary; }
+    if(iphi==10 && ieta==9) { regionColl[165] = regionSummary; regionColl_input[151] = regionSummary; }
+    if(iphi==10 && ieta==8) { regionColl[166] = regionSummary; regionColl_input[152] = regionSummary; }
+    if(iphi==10 && ieta==7) { regionColl[167] = regionSummary; regionColl_input[153] = regionSummary; }
     //BRAM 25
-    if(iphi==3 && ieta==13) regionColl[168] = regionSummary;
-    if(iphi==3 && ieta==12) regionColl[169] = regionSummary;
-    if(iphi==3 && ieta==11) regionColl[170] = regionSummary;
-    if(iphi==3 && ieta==10) regionColl[171] = regionSummary;
-    if(iphi==3 && ieta==9) regionColl[172] = regionSummary;
-    if(iphi==3 && ieta==8) regionColl[173] = regionSummary;
-    if(iphi==3 && ieta==7) regionColl[174] = regionSummary;
+    if(iphi==3 && ieta==13) { regionColl[168] = regionSummary; regionColl_input[49] = regionSummary; }
+    if(iphi==3 && ieta==12) { regionColl[169] = regionSummary; regionColl_input[50] = regionSummary; }
+    if(iphi==3 && ieta==11) { regionColl[170] = regionSummary; regionColl_input[51] = regionSummary; }
+    if(iphi==3 && ieta==10) { regionColl[171] = regionSummary; regionColl_input[52] = regionSummary; }
+    if(iphi==3 && ieta==9) { regionColl[172] = regionSummary; regionColl_input[53] = regionSummary; }
+    if(iphi==3 && ieta==8) { regionColl[173] = regionSummary; regionColl_input[54] = regionSummary; }
+    if(iphi==3 && ieta==7) { regionColl[174] = regionSummary; regionColl_input[55] = regionSummary; }
     //BRAM 26
-    if(iphi==3 && ieta==6) regionColl[175] = regionSummary;
-    if(iphi==3 && ieta==5) regionColl[176] = regionSummary;
-    if(iphi==3 && ieta==4) regionColl[177] = regionSummary;
-    if(iphi==3 && ieta==3) regionColl[178] = regionSummary;
-    if(iphi==3 && ieta==2) regionColl[179] = regionSummary;
-    if(iphi==3 && ieta==1) regionColl[180] = regionSummary;
-    if(iphi==3 && ieta==0) regionColl[181] = regionSummary;
+    if(iphi==3 && ieta==6) { regionColl[175] = regionSummary; regionColl_input[42] = regionSummary; }
+    if(iphi==3 && ieta==5) { regionColl[176] = regionSummary; regionColl_input[43] = regionSummary; }
+    if(iphi==3 && ieta==4) { regionColl[177] = regionSummary; regionColl_input[44] = regionSummary; }
+    if(iphi==3 && ieta==3) { regionColl[178] = regionSummary; regionColl_input[45] = regionSummary; }
+    if(iphi==3 && ieta==2) { regionColl[179] = regionSummary; regionColl_input[46] = regionSummary; }
+    if(iphi==3 && ieta==1) { regionColl[180] = regionSummary; regionColl_input[47] = regionSummary; }
+    if(iphi==3 && ieta==0) { regionColl[181] = regionSummary; regionColl_input[48] = regionSummary; }
     //BRAM 27
-    if(iphi==6 && ieta==6) regionColl[182] = regionSummary;
-    if(iphi==6 && ieta==5) regionColl[183] = regionSummary;
-    if(iphi==6 && ieta==4) regionColl[184] = regionSummary;
-    if(iphi==6 && ieta==3) regionColl[185] = regionSummary;
-    if(iphi==6 && ieta==2) regionColl[186] = regionSummary;
-    if(iphi==6 && ieta==1) regionColl[187] = regionSummary;
-    if(iphi==6 && ieta==0) regionColl[188] = regionSummary;
+    if(iphi==6 && ieta==6) { regionColl[182] = regionSummary; regionColl_input[84] = regionSummary; }
+    if(iphi==6 && ieta==5) { regionColl[183] = regionSummary; regionColl_input[85] = regionSummary; }
+    if(iphi==6 && ieta==4) { regionColl[184] = regionSummary; regionColl_input[86] = regionSummary; }
+    if(iphi==6 && ieta==3) { regionColl[185] = regionSummary; regionColl_input[87] = regionSummary; }
+    if(iphi==6 && ieta==2) { regionColl[186] = regionSummary; regionColl_input[88] = regionSummary; }
+    if(iphi==6 && ieta==1) { regionColl[187] = regionSummary; regionColl_input[89] = regionSummary; }
+    if(iphi==6 && ieta==0) { regionColl[188] = regionSummary; regionColl_input[90] = regionSummary; }
     //BRAM 28
-    if(iphi==6 && ieta==13) regionColl[189] = regionSummary;
-    if(iphi==6 && ieta==12) regionColl[190] = regionSummary;
-    if(iphi==6 && ieta==11) regionColl[191] = regionSummary;
-    if(iphi==6 && ieta==10) regionColl[192] = regionSummary;
-    if(iphi==6 && ieta==9) regionColl[193] = regionSummary;
-    if(iphi==6 && ieta==8) regionColl[194] = regionSummary;
-    if(iphi==6 && ieta==7) regionColl[195] = regionSummary;
+    if(iphi==6 && ieta==13) { regionColl[189] = regionSummary; regionColl_input[91] = regionSummary; }
+    if(iphi==6 && ieta==12) { regionColl[190] = regionSummary; regionColl_input[92] = regionSummary; }
+    if(iphi==6 && ieta==11) { regionColl[191] = regionSummary; regionColl_input[93] = regionSummary; }
+    if(iphi==6 && ieta==10) { regionColl[192] = regionSummary; regionColl_input[94] = regionSummary; }
+    if(iphi==6 && ieta==9) { regionColl[193] = regionSummary; regionColl_input[95] = regionSummary; }
+    if(iphi==6 && ieta==8) { regionColl[194] = regionSummary; regionColl_input[96] = regionSummary; }
+    if(iphi==6 && ieta==7) { regionColl[195] = regionSummary; regionColl_input[97] = regionSummary; }
     //BRAM 29
-    if(iphi==7 && ieta==6) regionColl[196] = regionSummary;
-    if(iphi==7 && ieta==5) regionColl[197] = regionSummary;
-    if(iphi==7 && ieta==4) regionColl[198] = regionSummary;
-    if(iphi==7 && ieta==3) regionColl[199] = regionSummary;
-    if(iphi==7 && ieta==2) regionColl[200] = regionSummary;
-    if(iphi==7 && ieta==1) regionColl[201] = regionSummary;
-    if(iphi==7 && ieta==0) regionColl[202] = regionSummary;
+    if(iphi==7 && ieta==6) { regionColl[196] = regionSummary; regionColl_input[98] = regionSummary; }
+    if(iphi==7 && ieta==5) { regionColl[197] = regionSummary; regionColl_input[99] = regionSummary; }
+    if(iphi==7 && ieta==4) { regionColl[198] = regionSummary; regionColl_input[100] = regionSummary; }
+    if(iphi==7 && ieta==3) { regionColl[199] = regionSummary; regionColl_input[101] = regionSummary; }
+    if(iphi==7 && ieta==2) { regionColl[200] = regionSummary; regionColl_input[102] = regionSummary; }
+    if(iphi==7 && ieta==1) { regionColl[201] = regionSummary; regionColl_input[103] = regionSummary; }
+    if(iphi==7 && ieta==0) { regionColl[202] = regionSummary; regionColl_input[104] = regionSummary; }
     //BRAM 30
-    if(iphi==7 && ieta==13) regionColl[203] = regionSummary;
-    if(iphi==7 && ieta==12) regionColl[204] = regionSummary;
-    if(iphi==7 && ieta==11) regionColl[205] = regionSummary;
-    if(iphi==7 && ieta==10) regionColl[206] = regionSummary;
-    if(iphi==7 && ieta==9) regionColl[207] = regionSummary;
-    if(iphi==7 && ieta==8) regionColl[208] = regionSummary;
-    if(iphi==7 && ieta==7) regionColl[209] = regionSummary;
+    if(iphi==7 && ieta==13) { regionColl[203] = regionSummary; regionColl_input[105] = regionSummary; }
+    if(iphi==7 && ieta==12) { regionColl[204] = regionSummary; regionColl_input[106] = regionSummary; }
+    if(iphi==7 && ieta==11) { regionColl[205] = regionSummary; regionColl_input[107] = regionSummary; }
+    if(iphi==7 && ieta==10) { regionColl[206] = regionSummary; regionColl_input[108] = regionSummary; }
+    if(iphi==7 && ieta==9) { regionColl[207] = regionSummary; regionColl_input[109] = regionSummary; }
+    if(iphi==7 && ieta==8) { regionColl[208] = regionSummary; regionColl_input[110] = regionSummary; }
+    if(iphi==7 && ieta==7) { regionColl[209] = regionSummary; regionColl_input[111] = regionSummary; }
     //BRAM 31
-    if(iphi==8 && ieta==6) regionColl[210] = regionSummary;
-    if(iphi==8 && ieta==5) regionColl[211] = regionSummary;
-    if(iphi==8 && ieta==4) regionColl[212] = regionSummary;
-    if(iphi==8 && ieta==3) regionColl[213] = regionSummary;
-    if(iphi==8 && ieta==2) regionColl[214] = regionSummary;
-    if(iphi==8 && ieta==1) regionColl[215] = regionSummary;
-    if(iphi==8 && ieta==0) regionColl[216] = regionSummary;
+    if(iphi==8 && ieta==6) { regionColl[210] = regionSummary; regionColl_input[112] = regionSummary; }
+    if(iphi==8 && ieta==5) { regionColl[211] = regionSummary; regionColl_input[113] = regionSummary; }
+    if(iphi==8 && ieta==4) { regionColl[212] = regionSummary; regionColl_input[114] = regionSummary; }
+    if(iphi==8 && ieta==3) { regionColl[213] = regionSummary; regionColl_input[115] = regionSummary; }
+    if(iphi==8 && ieta==2) { regionColl[214] = regionSummary; regionColl_input[116] = regionSummary; }
+    if(iphi==8 && ieta==1) { regionColl[215] = regionSummary; regionColl_input[117] = regionSummary; }
+    if(iphi==8 && ieta==0) { regionColl[216] = regionSummary; regionColl_input[118] = regionSummary; }
     //BRAM 32
-    if(iphi==8 && ieta==13) regionColl[217] = regionSummary;
-    if(iphi==8 && ieta==12) regionColl[218] = regionSummary;
-    if(iphi==8 && ieta==11) regionColl[219] = regionSummary;
-    if(iphi==8 && ieta==10) regionColl[220] = regionSummary;
-    if(iphi==8 && ieta==9) regionColl[221] = regionSummary;
-    if(iphi==8 && ieta==8) regionColl[222] = regionSummary;
-    if(iphi==8 && ieta==7) regionColl[223] = regionSummary;
+    if(iphi==8 && ieta==13) { regionColl[217] = regionSummary; regionColl_input[119] = regionSummary; }
+    if(iphi==8 && ieta==12) { regionColl[218] = regionSummary; regionColl_input[120] = regionSummary; }
+    if(iphi==8 && ieta==11) { regionColl[219] = regionSummary; regionColl_input[121] = regionSummary; }
+    if(iphi==8 && ieta==10) { regionColl[220] = regionSummary; regionColl_input[122] = regionSummary; }
+    if(iphi==8 && ieta==9) { regionColl[221] = regionSummary; regionColl_input[123] = regionSummary; }
+    if(iphi==8 && ieta==8) { regionColl[222] = regionSummary; regionColl_input[124] = regionSummary; }
+    if(iphi==8 && ieta==7) { regionColl[223] = regionSummary; regionColl_input[125] = regionSummary; }
     //BRAM 33
-    if(iphi==5 && ieta==6) regionColl[224] = regionSummary;
-    if(iphi==5 && ieta==5) regionColl[225] = regionSummary;
-    if(iphi==5 && ieta==4) regionColl[226] = regionSummary;
-    if(iphi==5 && ieta==3) regionColl[227] = regionSummary;
-    if(iphi==5 && ieta==2) regionColl[228] = regionSummary;
-    if(iphi==5 && ieta==1) regionColl[229] = regionSummary;
-    if(iphi==5 && ieta==0) regionColl[230] = regionSummary;
+    if(iphi==5 && ieta==6) { regionColl[224] = regionSummary; regionColl_input[70] = regionSummary; }
+    if(iphi==5 && ieta==5) { regionColl[225] = regionSummary; regionColl_input[71] = regionSummary; }
+    if(iphi==5 && ieta==4) { regionColl[226] = regionSummary; regionColl_input[72] = regionSummary; }
+    if(iphi==5 && ieta==3) { regionColl[227] = regionSummary; regionColl_input[73] = regionSummary; }
+    if(iphi==5 && ieta==2) { regionColl[228] = regionSummary; regionColl_input[74] = regionSummary; }
+    if(iphi==5 && ieta==1) { regionColl[229] = regionSummary; regionColl_input[75] = regionSummary; }
+    if(iphi==5 && ieta==0) { regionColl[230] = regionSummary; regionColl_input[76] = regionSummary; }
     //BRAM 34
-    if(iphi==5 && ieta==13) regionColl[231] = regionSummary;
-    if(iphi==5 && ieta==12) regionColl[232] = regionSummary;
-    if(iphi==5 && ieta==11) regionColl[233] = regionSummary;
-    if(iphi==5 && ieta==10) regionColl[234] = regionSummary;
-    if(iphi==5 && ieta==9) regionColl[235] = regionSummary;
-    if(iphi==5 && ieta==8) regionColl[236] = regionSummary;
-    if(iphi==5 && ieta==7) regionColl[237] = regionSummary;
+    if(iphi==5 && ieta==13) { regionColl[231] = regionSummary; regionColl_input[77] = regionSummary; }
+    if(iphi==5 && ieta==12) { regionColl[232] = regionSummary; regionColl_input[78] = regionSummary; }
+    if(iphi==5 && ieta==11) { regionColl[233] = regionSummary; regionColl_input[79] = regionSummary; }
+    if(iphi==5 && ieta==10) { regionColl[234] = regionSummary; regionColl_input[80] = regionSummary; }
+    if(iphi==5 && ieta==9) { regionColl[235] = regionSummary; regionColl_input[81] = regionSummary; }
+    if(iphi==5 && ieta==8) { regionColl[236] = regionSummary; regionColl_input[82] = regionSummary; }
+    if(iphi==5 && ieta==7) { regionColl[237] = regionSummary; regionColl_input[83] = regionSummary; }
     //BRAM 35
-    if(iphi==4 && ieta==6) regionColl[238] = regionSummary;
-    if(iphi==4 && ieta==5) regionColl[239] = regionSummary;
-    if(iphi==4 && ieta==4) regionColl[240] = regionSummary;
-    if(iphi==4 && ieta==3) regionColl[241] = regionSummary;
-    if(iphi==4 && ieta==2) regionColl[242] = regionSummary;
-    if(iphi==4 && ieta==1) regionColl[243] = regionSummary;
-    if(iphi==4 && ieta==0) regionColl[244] = regionSummary;
+    if(iphi==4 && ieta==6) { regionColl[238] = regionSummary; regionColl_input[56] = regionSummary; }
+    if(iphi==4 && ieta==5) { regionColl[239] = regionSummary; regionColl_input[57] = regionSummary; }
+    if(iphi==4 && ieta==4) { regionColl[240] = regionSummary; regionColl_input[58] = regionSummary; }
+    if(iphi==4 && ieta==3) { regionColl[241] = regionSummary; regionColl_input[59] = regionSummary; }
+    if(iphi==4 && ieta==2) { regionColl[242] = regionSummary; regionColl_input[60] = regionSummary; }
+    if(iphi==4 && ieta==1) { regionColl[243] = regionSummary; regionColl_input[61] = regionSummary; }
+    if(iphi==4 && ieta==0) { regionColl[244] = regionSummary; regionColl_input[62] = regionSummary; }
     //BRAM 36
-    if(iphi==4 && ieta==13) regionColl[245] = regionSummary;
-    if(iphi==4 && ieta==12) regionColl[246] = regionSummary;
-    if(iphi==4 && ieta==11) regionColl[247] = regionSummary;
-    if(iphi==4 && ieta==10) regionColl[248] = regionSummary;
-    if(iphi==4 && ieta==9) regionColl[249] = regionSummary;
-    if(iphi==4 && ieta==8) regionColl[250] = regionSummary;
-    if(iphi==4 && ieta==7) regionColl[251] = regionSummary;
+    if(iphi==4 && ieta==13) { regionColl[245] = regionSummary; regionColl_input[63] = regionSummary; }
+    if(iphi==4 && ieta==12) { regionColl[246] = regionSummary; regionColl_input[64] = regionSummary; }
+    if(iphi==4 && ieta==11) { regionColl[247] = regionSummary; regionColl_input[65] = regionSummary; }
+    if(iphi==4 && ieta==10) { regionColl[248] = regionSummary; regionColl_input[66] = regionSummary; }
+    if(iphi==4 && ieta==9) { regionColl[249] = regionSummary; regionColl_input[67] = regionSummary; }
+    if(iphi==4 && ieta==8) { regionColl[250] = regionSummary; regionColl_input[68] = regionSummary; }
+    if(iphi==4 && ieta==7) { regionColl[251] = regionSummary; regionColl_input[69] = regionSummary; }
 
   }
 
@@ -524,11 +525,14 @@ void L1TRegionDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& i
   //}
 
   uint16_t eWord[252] = {0};
+  uint16_t eWord_input[252] = {0};
   unsigned short lines = 4*readCount_;
+  unsigned short lines_input = 4*readCount_;
 
   for (unsigned int ireg = 0; ireg < 252; ireg++){
     cregions.push_back(regionColl[ireg]);
     eWord[ireg] = regionColl[ireg];
+    eWord_input[ireg] = regionColl_input[ireg];
   }
 
   // Write input test vector to algoblock
@@ -553,10 +557,33 @@ void L1TRegionDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& i
 
   file1.close();
 
+  // Write input test vector after link rearrangement as algorithm expects it to be ordered
+
+  std::fstream file3;
+
+  char fileName3[20];
+  sprintf(fileName3,"Regions_input.txt");
+  file3.open(fileName3,std::fstream::in | std::fstream::out | std::fstream::app);
+
+  for(int cyc=0; cyc<4; cyc++){
+    file3 << "0x" << std::hex << std::setfill('0') << std::setw(4) << lines_input << "\t";
+    for(int i=0; i<36; i++){
+      if(cyc==0) file3 << "0x" << std::hex << std::setfill('0') << std::setw(2) << (0XFF & eWord_input[i*7+1]) << std::setw(4) << eWord_input[i*7] << "00\t";
+      if(cyc==1) file3 << "0x" << std::hex << std::setfill('0') << std::setw(2) << (0XFF & eWord_input[i*7+3]) << std::setw(4) << eWord_input[i*7+2] << std::setfill('0') << std::setw(2) << ( 0xFF & (eWord_input[i*7+1] >> 8)) <<"\t";
+      if(cyc==2) file3 << "0x" << std::hex << std::setfill('0') << std::setw(2) << (0XFF & eWord_input[i*7+5]) << std::setw(4) << eWord_input[i*7+4] << std::setfill('0') << std::setw(2) << ( 0xFF & (eWord_input[i*7+3] >> 8)) <<"\t";
+      if(cyc==3) file3 << "0x00" << std::hex << std::setfill('0') << std::setw(4) << eWord_input[i*7+6] << std::setfill('0') << std::setw(2) << ( 0xFF & (eWord_input[i*7+5] >> 8)) <<"\t";
+    }
+    lines_input++;
+    file3 << "\n";
+  }
+
+  file3.close();
+
   // Prepare output test vector info
   edm::Handle< float > anomalyHandle;
   iEvent.getByToken(anomalyToken_, anomalyHandle);
   anomalyScore = *anomalyHandle;
+  //std::cout<<"RegionDumper: anomalyScore = "<<anomalyScore<<std::endl;
 
   ap_ufixed<16, 8> modelResult = ap_ufixed<16,8>(std::to_string(anomalyScore).c_str(), 10);
 
