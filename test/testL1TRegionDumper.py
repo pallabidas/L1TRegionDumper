@@ -1,7 +1,10 @@
 import os
 import FWCore.ParameterSet.Config as cms
 
-process = cms.Process("L1TRegionDumperTest")
+from Configuration.Eras.Era_Run3_2023_cff import Run3_2023
+process = cms.Process("L1TRegionDumperTest", Run3_2023)
+
+#process = cms.Process("L1TRegionDumperTest")
 
 process.load('Configuration.StandardSequences.Services_cff')
 process.load('SimGeneral.HepPDTESSource.pythiapdt_cfi')
@@ -81,6 +84,7 @@ process.source = cms.Source(
 )
 
 #process.source.eventsToProcess = cms.untracked.VEventRange("369869:56300216","369869:56194154","369869:58331384","369869:58280392","369869:58340410")
+#process.source.eventsToProcess = cms.untracked.VEventRange("369869:55045026","369869:54991599","369869:54945619","369869:54998508")
 
 process.options = cms.untracked.PSet(
     
