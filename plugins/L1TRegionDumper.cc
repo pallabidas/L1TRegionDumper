@@ -222,6 +222,7 @@ void L1TRegionDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& i
     regionColl_input[ieta][iphi] = regionSummary;
     //std::cout<<"count: "<<count<<"\t"<<"et: "<<et<<"\t"<<"ieta : "<<ieta<<"\t"<<"iphi: "<<iphi<<"\t"<<"rloc_eta: "<<((0xFFFF & regionSummary) >> 14)<<"\t"<<"rloc_phi: "<<((0x3FFF & regionSummary) >> 12)<<"\t"<<"location: "<<hitTowerLocation<<"\t"<<"eleBit: "<<eleBit<<"\t"<<"tauBit: "<<tauBit<<std::endl;
     if(ieta==0 && iphi==0) { default_eta += ((0xFFFF & regionSummary) >> 14); default_phi += ((0x3FFF & regionSummary) >> 12); }
+    if(default_phi > 71) default_phi -= 72;
     count++;
     //For negative eta: most significant bit is Region 0 (ieta=6) and least significant is Region 6 (ieta=0)
     //For positive eta: most significant bit is Region 6 (ieta=13) and least significant is Region 0 (ieta=7)
@@ -531,6 +532,7 @@ void L1TRegionDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& i
   uint16_t eWord_input[252] = {0};
   unsigned short lines = 4*readCount_;
   unsigned short lines_input = 4*readCount_;
+  unsigned short lines_output = 6*readCount_;
 
   for (unsigned int ireg = 0; ireg < 252; ireg++){
     eWord[ireg] = regionColl[ireg];
@@ -544,6 +546,12 @@ void L1TRegionDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& i
   char fileName1[20];
   sprintf(fileName1,"Regions.txt");
   file1.open(fileName1,std::fstream::in | std::fstream::out | std::fstream::app);
+
+  if(readCount_==0) {
+     file1 << "=====================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================" <<std::endl;
+     file1 << "WordCnt LINK_00         LINK_01         LINK_02         LINK_03         LINK_04         LINK_05         LINK_06         LINK_07         LINK_08         LINK_09         LINK_10         LINK_11         LINK_12         LINK_13         LINK_14         LINK_15         LINK_16         LINK_17         LINK_18         LINK_19         LINK_20         LINK_21         LINK_22         LINK_23         LINK_24         LINK_25         LINK_26         LINK_27         LINK_28         LINK_29         LINK_30         LINK_31         LINK_32         LINK_33         LINK_34         LINK_35" <<std::endl;
+     file1 << "#BeginData" <<std::endl;
+  }
 
   for(int cyc=0; cyc<4; cyc++){
     file1 << "0x" << std::hex << std::setfill('0') << std::setw(4) << lines << "\t";
@@ -567,6 +575,12 @@ void L1TRegionDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& i
   sprintf(fileName3,"Regions_input.txt");
   file3.open(fileName3,std::fstream::in | std::fstream::out | std::fstream::app);
 
+  if(readCount_==0) {
+     file3 << "=====================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================" <<std::endl;
+     file3 << "WordCnt LINK_00         LINK_01         LINK_02         LINK_03         LINK_04         LINK_05         LINK_06         LINK_07         LINK_08         LINK_09         LINK_10         LINK_11         LINK_12         LINK_13         LINK_14         LINK_15         LINK_16         LINK_17         LINK_18         LINK_19         LINK_20         LINK_21         LINK_22         LINK_23         LINK_24         LINK_25         LINK_26         LINK_27         LINK_28         LINK_29         LINK_30         LINK_31         LINK_32         LINK_33         LINK_34         LINK_35" <<std::endl;
+     file3 << "#BeginData" <<std::endl;
+  }
+
   for(int cyc=0; cyc<4; cyc++){
     file3 << "0x" << std::hex << std::setfill('0') << std::setw(4) << lines_input << "\t";
     for(int i=0; i<36; i++){
@@ -587,7 +601,8 @@ void L1TRegionDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& i
   anomalyScore = *anomalyHandle;
   //std::cout<<"RegionDumper: anomalyScore = "<<std::dec<<anomalyScore<<std::endl;
 
-  ap_ufixed<16, 8> modelResult = ap_ufixed<16,8>(std::to_string(anomalyScore).c_str(), 10);
+  unsigned int integerRep = anomalyScore * pow(2.0, 8);
+  ap_ufixed<16, 16> modelResult = ap_ufixed<16, 16>(integerRep);
 
   uint32_t output[6] = {0};
   output[0] |= ((0xF & modelResult.range(15, 12)) << 28);
@@ -637,8 +652,17 @@ void L1TRegionDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& i
   sprintf(fileName2,"Outputs.txt");
   file2.open(fileName2,std::fstream::in | std::fstream::out | std::fstream::app);
 
+  if(readCount_==0) {
+    file2 << "=============================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================" << std::endl;
+    file2 << "WordCnt             LINK_00               LINK_01" << std::endl;
+    file2 << "#BeginData" << std::endl;
+  }
+
+
   for(int i = 0; i < 6; i++){
+    file2 << "0x" << std::hex << std::setfill('0') << std::setw(4) << lines_output << "\t";
     file2 << "0x" << std::hex << std::setfill('0') << std::setw(8) << (0XFFFFFFFF & output[i]) << std::endl;
+    lines_output++;
   }
 
   file2.close();
