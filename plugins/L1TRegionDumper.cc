@@ -73,7 +73,7 @@ namespace l1tcalo {
   constexpr uint32_t CrateNoShift{23};
 }  // namespace l1tcalo
 
-bool compareByPt (TLorentzVector i, TLorentzVector j) { return(i.Pt() > j.Pt()); };
+bool compareByPt (TLorentzVector i, TLorentzVector j) { return(i.Pt() >= j.Pt()); };
 
 const ap_uint<8> ieta_lut[2][42] = {
     {0x00, 0x01, 0x03, 0x05, 0x07, 0x09, 0x0B, 0x0D, 0x0F, 0x11, 0x13, 0x15,
@@ -131,8 +131,8 @@ int eta_converter(float eta_value) {
 
 int phi_converter(float phi_value) {
   float towerPhi = 99;
-  if(phi_value < 0) towerPhi = (71.5 + phi_value/0.0872) + 1;
-  else towerPhi = (phi_value/0.0872 - 0.5) + 1;
+  if(phi_value < 0) towerPhi = 73 + floor(phi_value/0.0872);
+  else towerPhi = floor(phi_value/0.0872) + 1;
   return int(towerPhi);
 }
 
