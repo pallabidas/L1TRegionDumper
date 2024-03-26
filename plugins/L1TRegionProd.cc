@@ -56,6 +56,7 @@ private:
 
   // ----------member data ---------------------------
   edm::EDGetTokenT<std::vector <L1CaloRegion> > regionsToken_;
+  int readCount_;
 };
 
 //
@@ -70,7 +71,8 @@ private:
 // constructors and destructor
 //
 L1TRegionProd::L1TRegionProd(const edm::ParameterSet& iConfig) 
-  : regionsToken_(consumes<std::vector <L1CaloRegion> >(iConfig.getUntrackedParameter<edm::InputTag>("UCTRegion"))) {
+  : regionsToken_(consumes<std::vector <L1CaloRegion> >(iConfig.getUntrackedParameter<edm::InputTag>("UCTRegion"))),
+  readCount_(0){
   produces<L1CaloRegionCollection>("TestRegion");
   //register your products
   /* Examples
@@ -104,39 +106,48 @@ void L1TRegionProd::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
   for (const auto& region : iEvent.get(regionsToken_)) {
     uint32_t ieta = region.id().ieta();
     uint32_t iphi = region.id().iphi();
-    uint16_t regionSummary = region.raw();
-    if (iphi==15) {
-      rgnCollection->push_back(L1CaloRegion((uint16_t)regionSummary, (unsigned)ieta, (unsigned)iphi, (int16_t)0));
-      rgnCollection->push_back(L1CaloRegion((uint16_t)regionSummary, (unsigned)ieta, (unsigned)3, (int16_t)0));
-      rgnCollection->push_back(L1CaloRegion((uint16_t)regionSummary, (unsigned)ieta, (unsigned)9, (int16_t)0));
-    }
-    if (iphi==16) {
-      rgnCollection->push_back(L1CaloRegion((uint16_t)regionSummary, (unsigned)ieta, (unsigned)iphi, (int16_t)0));
-      rgnCollection->push_back(L1CaloRegion((uint16_t)regionSummary, (unsigned)ieta, (unsigned)4, (int16_t)0));
-      rgnCollection->push_back(L1CaloRegion((uint16_t)regionSummary, (unsigned)ieta, (unsigned)10, (int16_t)0));
-    }
-    if (iphi==17) {
-      rgnCollection->push_back(L1CaloRegion((uint16_t)regionSummary, (unsigned)ieta, (unsigned)iphi, (int16_t)0));
-      rgnCollection->push_back(L1CaloRegion((uint16_t)regionSummary, (unsigned)ieta, (unsigned)5, (int16_t)0));
-      rgnCollection->push_back(L1CaloRegion((uint16_t)regionSummary, (unsigned)ieta, (unsigned)11, (int16_t)0));
-    }
-    if (iphi==0) {
-      rgnCollection->push_back(L1CaloRegion((uint16_t)regionSummary, (unsigned)ieta, (unsigned)iphi, (int16_t)0));
-      rgnCollection->push_back(L1CaloRegion((uint16_t)regionSummary, (unsigned)ieta, (unsigned)6, (int16_t)0));
-      rgnCollection->push_back(L1CaloRegion((uint16_t)regionSummary, (unsigned)ieta, (unsigned)12, (int16_t)0));
-    }
-    if (iphi==1) {
-      rgnCollection->push_back(L1CaloRegion((uint16_t)regionSummary, (unsigned)ieta, (unsigned)iphi, (int16_t)0));
-      rgnCollection->push_back(L1CaloRegion((uint16_t)regionSummary, (unsigned)ieta, (unsigned)7, (int16_t)0));
-      rgnCollection->push_back(L1CaloRegion((uint16_t)regionSummary, (unsigned)ieta, (unsigned)13, (int16_t)0));
-    }
-    if (iphi==2) {
-      rgnCollection->push_back(L1CaloRegion((uint16_t)regionSummary, (unsigned)ieta, (unsigned)iphi, (int16_t)0));
-      rgnCollection->push_back(L1CaloRegion((uint16_t)regionSummary, (unsigned)ieta, (unsigned)8, (int16_t)0));
-      rgnCollection->push_back(L1CaloRegion((uint16_t)regionSummary, (unsigned)ieta, (unsigned)14, (int16_t)0));
-    }
+    //uint16_t regionSummary = region.raw();
+    uint16_t regionSummary = 0;
+    //if (iphi==9 && (ieta-4==7 || ieta-4==13)) regionSummary = region.raw();
+    //if (iphi==0 && ieta-4==7) regionSummary = region.raw();
+    //if (readCount_==10 && iphi==0 && ieta-4==10) regionSummary = region.raw();
+    if (readCount_==99 && iphi==7 && ieta-4==1) regionSummary = region.raw();
+    //std::cout<<ieta<<"\t"<<iphi<<"\t"<<regionSummary<<std::endl;
+    rgnCollection->push_back(L1CaloRegion((uint16_t)regionSummary, (unsigned)ieta, (unsigned)iphi, (int16_t)0));
+    // copy the content of middle crate for the two other crates
+    //if (iphi==15) {
+    //  rgnCollection->push_back(L1CaloRegion((uint16_t)regionSummary, (unsigned)ieta, (unsigned)iphi, (int16_t)0));
+    //  rgnCollection->push_back(L1CaloRegion((uint16_t)regionSummary, (unsigned)ieta, (unsigned)3, (int16_t)0));
+    //  rgnCollection->push_back(L1CaloRegion((uint16_t)regionSummary, (unsigned)ieta, (unsigned)9, (int16_t)0));
+    //}
+    //if (iphi==16) {
+    //  rgnCollection->push_back(L1CaloRegion((uint16_t)regionSummary, (unsigned)ieta, (unsigned)iphi, (int16_t)0));
+    //  rgnCollection->push_back(L1CaloRegion((uint16_t)regionSummary, (unsigned)ieta, (unsigned)4, (int16_t)0));
+    //  rgnCollection->push_back(L1CaloRegion((uint16_t)regionSummary, (unsigned)ieta, (unsigned)10, (int16_t)0));
+    //}
+    //if (iphi==17) {
+    //  rgnCollection->push_back(L1CaloRegion((uint16_t)regionSummary, (unsigned)ieta, (unsigned)iphi, (int16_t)0));
+    //  rgnCollection->push_back(L1CaloRegion((uint16_t)regionSummary, (unsigned)ieta, (unsigned)5, (int16_t)0));
+    //  rgnCollection->push_back(L1CaloRegion((uint16_t)regionSummary, (unsigned)ieta, (unsigned)11, (int16_t)0));
+    //}
+    //if (iphi==0) {
+    //  rgnCollection->push_back(L1CaloRegion((uint16_t)regionSummary, (unsigned)ieta, (unsigned)iphi, (int16_t)0));
+    //  rgnCollection->push_back(L1CaloRegion((uint16_t)regionSummary, (unsigned)ieta, (unsigned)6, (int16_t)0));
+    //  rgnCollection->push_back(L1CaloRegion((uint16_t)regionSummary, (unsigned)ieta, (unsigned)12, (int16_t)0));
+    //}
+    //if (iphi==1) {
+    //  rgnCollection->push_back(L1CaloRegion((uint16_t)regionSummary, (unsigned)ieta, (unsigned)iphi, (int16_t)0));
+    //  rgnCollection->push_back(L1CaloRegion((uint16_t)regionSummary, (unsigned)ieta, (unsigned)7, (int16_t)0));
+    //  rgnCollection->push_back(L1CaloRegion((uint16_t)regionSummary, (unsigned)ieta, (unsigned)13, (int16_t)0));
+    //}
+    //if (iphi==2) {
+    //  rgnCollection->push_back(L1CaloRegion((uint16_t)regionSummary, (unsigned)ieta, (unsigned)iphi, (int16_t)0));
+    //  rgnCollection->push_back(L1CaloRegion((uint16_t)regionSummary, (unsigned)ieta, (unsigned)8, (int16_t)0));
+    //  rgnCollection->push_back(L1CaloRegion((uint16_t)regionSummary, (unsigned)ieta, (unsigned)14, (int16_t)0));
+    //}
   }
   iEvent.put(std::move(rgnCollection), "TestRegion");
+  ++readCount_;
   /* This is an event example
   //Read 'ExampleData' from the Event
   ExampleData const& in = iEvent.get(inToken_);

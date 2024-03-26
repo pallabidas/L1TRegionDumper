@@ -43,8 +43,8 @@ process.l1tRegionProd = cms.EDProducer(
 process.l1tRegionProdTask = cms.Task(
     process.l1tRegionProd,
 )
-#process.l1tRegionProdPath = cms.Path(process.l1tRegionProdTask)
-#process.schedule.append(process.l1tRegionProdPath)
+process.l1tRegionProdPath = cms.Path(process.l1tRegionProdTask)
+process.schedule.append(process.l1tRegionProdPath)
 
 #process.load('L1Trigger.L1TCaloLayer1.L1TCaloSummaryCICADAv2p1p1')
 #process.productionTask = cms.Task(
@@ -67,8 +67,8 @@ process.caloDigis = cms.EDAnalyzer(
 
 process.l1tRegionDumper = cms.EDAnalyzer(
     "L1TRegionDumper",
-    UCTRegion = cms.untracked.InputTag("simCaloStage2Layer1Digis"),
-    #UCTRegion = cms.untracked.InputTag("l1tRegionProd", "TestRegion"),
+    #UCTRegion = cms.untracked.InputTag("simCaloStage2Layer1Digis"),
+    UCTRegion = cms.untracked.InputTag("l1tRegionProd", "TestRegion"),
     scoreSource = cms.InputTag("simCaloStage2Layer1Summary", "CICADAScore"),
     boostedJetCollection = cms.InputTag("simCaloStage2Layer1Summary", "Boosted"),
 )

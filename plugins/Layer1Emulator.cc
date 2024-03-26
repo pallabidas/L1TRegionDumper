@@ -28,7 +28,7 @@ public:
   bool writeLink(char CTP7Name[7], int zside, int ietaIn, int iphiIn, unsigned int gctphiIn,
 			       //bool writeLink(char CTP7Name[7], int zside, int ietaIn, int iphiIn,
 		 edm::Handle<edm::SortedCollection<HcalTriggerPrimitiveDigi> > &hcalTpgs,
-		 edm::Handle<EcalTrigPrimDigiCollection> &ecalTpgs);
+		 edm::Handle<EcalTrigPrimDigiCollection> &ecalTpgs, int count);
 
   bool findEcal(int ieta, int iphi, 
 		edm::Handle<EcalTrigPrimDigiCollection> &ecalTpgs, 
@@ -52,6 +52,7 @@ private:
   int ecalValue_;
   bool debug_;
   edm::ESGetToken<CaloTPGTranscoder, CaloTPGRecord> decoderToken_;
+  int readCount_;
 };
 
 Layer1Emulator::Layer1Emulator(const edm::ParameterSet& pset) {
@@ -61,6 +62,7 @@ Layer1Emulator::Layer1Emulator(const edm::ParameterSet& pset) {
   ecalValue_ = pset.getUntrackedParameter<int>("ecalValue",0);
   debug_ = pset.exists("debug") ? pset.getParameter<bool>("debug") : false;
   decoderToken_ = esConsumes<CaloTPGTranscoder, CaloTPGRecord>();
+  readCount_ = 0;
 }
 
 void Layer1Emulator::analyze(const edm::Event& evt, const edm::EventSetup& es) {
@@ -126,19 +128,20 @@ void Layer1Emulator::analyze(const edm::Event& evt, const edm::EventSetup& es) {
 	unsigned int gctphi  = CTP7[iCTP7].gctphi;
 	
 	for(int ieta = 1 ; ieta < 28; ieta=ieta+2){
-	  if(!writeLink(CTP7[iCTP7].name,zside,ieta,iphi,gctphi,hcalTpgs,ecalTpgs))
+	  if(!writeLink(CTP7[iCTP7].name,zside,ieta,iphi,gctphi,hcalTpgs,ecalTpgs,readCount_))
 	    std::cout<<"Error Writing Link"<<std::endl;
 	}
       }
     }
   fileLocations.close();
   file.close();
+  ++readCount_;
 }
 
 
 bool Layer1Emulator::writeLink(char CTP7Name[7], int zside, int ietaIn, int iphiIn, unsigned int gctphiIn,
 			       edm::Handle<edm::SortedCollection<HcalTriggerPrimitiveDigi> > &hcalTpgs,
-			       edm::Handle<EcalTrigPrimDigiCollection> &ecalTpgs)
+			       edm::Handle<EcalTrigPrimDigiCollection> &ecalTpgs, int count)
 {
   std::fstream fileEcal;
   std::fstream fileHcal;
@@ -175,12 +178,16 @@ bool Layer1Emulator::writeLink(char CTP7Name[7], int zside, int ietaIn, int iphi
    * iphi+1   hcalET[2]  hcalET[3]
    * iphi+2   hcalET[4]  hcalET[5]
    * iphi+3   hcalET[6]  hcalET[7]
-   */ 
-  
+   */
+
   for(int iphi = iphiIn, index = 0; iphi < 4 + iphiIn; iphi++, index+=2 ){
     int iphiFind = iphi;
     if(iphiFind == 73) iphiFind = 1;
     if(iphiFind == 74) iphiFind = 2;
+    //if(!((iphiFind > 34 && iphiFind < 39 ) && (zside*ieta == 1 || zside*ieta == 3 || zside*ieta == 25 || zside*ieta == 27))) continue;
+    //if(!((iphiFind > 70 || iphiFind < 3) && (zside*ieta == 1 || zside*ieta == 3))) continue;
+    //if(!(count==10 && (iphiFind > 70 || iphiFind < 3) && (zside*ieta == 13 || zside*ieta == 15))) continue;
+    if(!(count==99 && (iphiFind > 26 && iphiFind < 31) && (zside*ieta == -23 || zside*ieta == -21))) continue;
 
     if(!findHcal(  zside*ieta   , iphiFind, hcalTpgs,  hcalEt[index],    hcalFG[index]))
       std::cout<<"Error!" <<std::endl;
@@ -193,6 +200,7 @@ bool Layer1Emulator::writeLink(char CTP7Name[7], int zside, int ietaIn, int iphi
     
     if(!findEcal( zside*(ieta+1), iphiFind, ecalTpgs, ecalEt[index+1], ecalFG[index+4]))
       std::cout<<"Error!"<<std::endl;
+    //std::cout<<ieta<<"\t"<<iphi<<"\t"<<hcalEt[0]<<"\t"<<hcalEt[1]<<"\t"<<hcalEt[2]<<"\t"<<hcalEt[3]<<std::endl;
   }
   
   /* Now to make the words per the protocol
