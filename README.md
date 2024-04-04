@@ -14,7 +14,7 @@ cmsenv && git cms-init
 
 git cms-addpkg L1Trigger/L1TCaloLayer1
 
-git cms-rebase-topic aloeliger:CICADA_Paper_Mods_14_0_0_pre2
+git cms-rebase-topic pallabidas:CICADA_Paper_Mods_14_0_0_pre2_testvectors
 
 git clone --recursive https://github.com/aloeliger/anomalyDetection.git
 
