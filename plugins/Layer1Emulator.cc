@@ -86,8 +86,10 @@ void Layer1Emulator::analyze(const edm::Event& evt, const edm::EventSetup& es) {
   for(int i = 0 ; i < 18; i++){
     int iP = i*2;
     int iM = i*2 + 1;
-    CTP7[iP].zside =  1; CTP7[iP].iphi = i*4 + 1; sprintf(CTP7[iP].name,"P"); 
-    CTP7[iM].zside = -1; CTP7[iM].iphi = i*4 + 1; sprintf(CTP7[iM].name,"M"); 
+    int temp_phi = i*4 - 1;
+    if(temp_phi < 1) temp_phi += 72;
+    CTP7[iP].zside =  1; CTP7[iP].iphi = temp_phi; sprintf(CTP7[iP].name,"P"); 
+    CTP7[iM].zside = -1; CTP7[iM].iphi = temp_phi; sprintf(CTP7[iM].name,"M"); 
     }
 
   //calculate gct phi for all
@@ -184,10 +186,6 @@ bool Layer1Emulator::writeLink(char CTP7Name[7], int zside, int ietaIn, int iphi
     int iphiFind = iphi;
     if(iphiFind == 73) iphiFind = 1;
     if(iphiFind == 74) iphiFind = 2;
-    //if(!((iphiFind > 34 && iphiFind < 39 ) && (zside*ieta == 1 || zside*ieta == 3 || zside*ieta == 25 || zside*ieta == 27))) continue;
-    //if(!((iphiFind > 70 || iphiFind < 3) && (zside*ieta == 1 || zside*ieta == 3))) continue;
-    //if(!(count==10 && (iphiFind > 70 || iphiFind < 3) && (zside*ieta == 13 || zside*ieta == 15))) continue;
-    if(!(count==99 && (iphiFind > 26 && iphiFind < 31) && (zside*ieta == -23 || zside*ieta == -21))) continue;
 
     if(!findHcal(  zside*ieta   , iphiFind, hcalTpgs,  hcalEt[index],    hcalFG[index]))
       std::cout<<"Error!" <<std::endl;
@@ -200,7 +198,7 @@ bool Layer1Emulator::writeLink(char CTP7Name[7], int zside, int ietaIn, int iphi
     
     if(!findEcal( zside*(ieta+1), iphiFind, ecalTpgs, ecalEt[index+1], ecalFG[index+4]))
       std::cout<<"Error!"<<std::endl;
-    //std::cout<<ieta<<"\t"<<iphi<<"\t"<<hcalEt[0]<<"\t"<<hcalEt[1]<<"\t"<<hcalEt[2]<<"\t"<<hcalEt[3]<<std::endl;
+
   }
   
   /* Now to make the words per the protocol
@@ -269,6 +267,8 @@ bool Layer1Emulator::findHcal(int ieta, int iphi,
     //std::cout<<"HCAL ietaRef "<<ietaRef<<" zside "<<zside<<std::endl;
     if(ieta == ietaRef && iphi == iphiRef && zside == ieta/(abs(ieta))){
       hcalEt = tpg.SOI_compressedEt();
+      //if((iphiRef > 2 && iphiRef < 7) && (ietaRef > 4 && ietaRef < 9)) hcalEt = tpg.SOI_compressedEt(); // example to select Region 22
+      //hcalEt = 255; // saturated Et for the TPG
       hcalFG = tpg.SOI_fineGrain();
       foundDigi = true;
       break;
@@ -300,6 +300,8 @@ bool Layer1Emulator::findEcal(int ieta, int iphi,
       //if(tpg.compressedEt()>0)
 	//std::cout<<"ECAL ietaRef "<<ietaRef<<" iphiRef "<< iphiRef<<" zside "<<zside<< " tpgET "<< tpg.compressedEt() <<std::endl;
       ecalEt = tpg.compressedEt();
+      //if((iphiRef > 2 && iphiRef < 7) && (ietaRef > 4 && ietaRef < 9)) ecalEt = tpg.compressedEt(); // example to select Region 22
+      //ecalEt = 255; // saturated Et for the TPG
       ecalFG = tpg.fineGrain();
       foundDigi = true;
       break;

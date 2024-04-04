@@ -67,8 +67,8 @@ process.caloDigis = cms.EDAnalyzer(
 
 process.l1tRegionDumper = cms.EDAnalyzer(
     "L1TRegionDumper",
-    #UCTRegion = cms.untracked.InputTag("simCaloStage2Layer1Digis"),
-    UCTRegion = cms.untracked.InputTag("l1tRegionProd", "TestRegion"),
+    UCTRegion = cms.untracked.InputTag("simCaloStage2Layer1Digis"),
+    #UCTRegion = cms.untracked.InputTag("l1tRegionProd", "TestRegion"),
     scoreSource = cms.InputTag("simCaloStage2Layer1Summary", "CICADAScore"),
     boostedJetCollection = cms.InputTag("simCaloStage2Layer1Summary", "Boosted"),
 )
@@ -88,7 +88,7 @@ process.source = cms.Source(
 
 #process.source.eventsToProcess = cms.untracked.VEventRange("369869:56300216","369869:56194154","369869:58331384","369869:58280392","369869:58340410")
 #process.source.eventsToProcess = cms.untracked.VEventRange("369869:55045026","369869:54991599","369869:54945619","369869:54998508")
-#process.source.eventsToProcess = cms.untracked.VEventRange("1:259043")
+#process.source.eventsToProcess = cms.untracked.VEventRange("1:259012")
 
 process.options = cms.untracked.PSet(
     
