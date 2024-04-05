@@ -193,10 +193,10 @@ bool Layer1Emulator::writeLink(char CTP7Name[7], int zside, int ietaIn, int iphi
     if(!findEcal(  zside*ieta   , iphiFind, ecalTpgs,  ecalEt[index],    ecalFG[index]))
       std::cout<<"Error!"<<std::endl;
 
-    if(!findHcal( zside*(ieta+1), iphiFind, hcalTpgs, hcalEt[index+1], hcalFG[index+4]))
+    if(!findHcal( zside*(ieta+1), iphiFind, hcalTpgs, hcalEt[index+1], hcalFG[index+1]))
       std::cout<<"Error!" <<std::endl;
     
-    if(!findEcal( zside*(ieta+1), iphiFind, ecalTpgs, ecalEt[index+1], ecalFG[index+4]))
+    if(!findEcal( zside*(ieta+1), iphiFind, ecalTpgs, ecalEt[index+1], ecalFG[index+1]))
       std::cout<<"Error!"<<std::endl;
 
   }
