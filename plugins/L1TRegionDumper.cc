@@ -220,6 +220,9 @@ void L1TRegionDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& i
     //bool tauBit = !((l1tcalo::RegionTauVeto & regionSummary) == l1tcalo::RegionTauVeto);
     //uint32_t hitTowerLocation = (location & 0xF);
     regionColl_input[ieta][iphi] = regionSummary;
+    // if(iphi==0) {
+    //   std::cout<<"iPhi 0, iEta "<<ieta<<" Region Hex: "<<std::hex<<std::setfill('0')<<std::setw(4)<<regionSummary<<std::endl;
+    // }
     //std::cout<<"count: "<<count<<"\t"<<"et: "<<et<<"\t"<<"ieta : "<<ieta<<"\t"<<"iphi: "<<iphi<<"\t"<<"rloc_eta: "<<((0xFFFF & regionSummary) >> 14)<<"\t"<<"rloc_phi: "<<((0x3FFF & regionSummary) >> 12)<<"\t"<<"location: "<<hitTowerLocation<<"\t"<<"eleBit: "<<eleBit<<"\t"<<"tauBit: "<<tauBit<<std::endl;
     if(ieta==0 && iphi==0) { default_eta += ((0xFFFF & regionSummary) >> 14); default_phi += ((0x3FFF & regionSummary) >> 12); }
     if(default_phi > 71) default_phi -= 72;
@@ -532,6 +535,7 @@ void L1TRegionDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& i
   uint16_t eWord_input[252] = {0};
   unsigned short lines = 4*readCount_;
   unsigned short lines_input = 4*readCount_;
+    unsigned short lines_match = 4*readCount_;
   unsigned short lines_output = 6*readCount_;
 
   for (unsigned int ireg = 0; ireg < 252; ireg++){
@@ -594,6 +598,39 @@ void L1TRegionDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& i
   }
 
   file3.close();
+
+  //Yeesh, what a mess
+  std::fstream file4;
+
+  char fileName4[20];
+  sprintf(fileName4, "Regions_match.txt");
+  file4.open(fileName4,std::fstream::in | std::fstream::out | std::fstream::app);
+  if (readCount_==0) {
+     file4 << "=====================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================" <<std::endl;
+     file4 << "WordCnt LINK_00         LINK_01         LINK_02         LINK_03         LINK_04         LINK_05         LINK_06         LINK_07         LINK_08         LINK_09         LINK_10         LINK_11         LINK_12         LINK_13         LINK_14         LINK_15         LINK_16         LINK_17         LINK_18         LINK_19         LINK_20         LINK_21         LINK_22         LINK_23         LINK_24         LINK_25         LINK_26         LINK_27         LINK_28         LINK_29         LINK_30         LINK_31         LINK_32         LINK_33         LINK_34         LINK_35" <<std::endl;
+     file4 << "#BeginData" <<std::endl;
+  }
+  for(int cyc=0; cyc<4; cyc++){
+    file4 << "0x" << std::hex << std::setfill('0') << std::setw(4) << lines_match << "\t";
+    for(int i=0; i<36; i++){
+      if(i%2 == 1){ //odd link, positive eta
+	if(cyc==0) file4 << "0x" << std::hex << std::setfill('0') << std::setw(2) << (0XFF & eWord_input[i*7+1]) << std::setw(4) << eWord_input[i*7] << "00\t";
+	if(cyc==1) file4 << "0x" << std::hex << std::setfill('0') << std::setw(2) << (0XFF & eWord_input[i*7+3]) << std::setw(4) << eWord_input[i*7+2] << std::setfill('0') << std::setw(2) << ( 0xFF & (eWord_input[i*7+1] >> 8)) <<"\t";
+	if(cyc==2) file4 << "0x" << std::hex << std::setfill('0') << std::setw(2) << (0XFF & eWord_input[i*7+5]) << std::setw(4) << eWord_input[i*7+4] << std::setfill('0') << std::setw(2) << ( 0xFF & (eWord_input[i*7+3] >> 8)) <<"\t";
+	if(cyc==3) file4 << "0x00" << std::hex << std::setfill('0') << std::setw(4) << eWord_input[i*7+6] << std::setfill('0') << std::setw(2) << ( 0xFF & (eWord_input[i*7+5] >> 8)) <<"\t";
+      }
+      else { //even link, negative eta
+	if(cyc==0) file4 << "0x" << std::hex << std::setfill('0') << std::setw(2) << (0XFF & eWord_input[i*7+5]) << std::setw(4) << eWord_input[i*7+6] << "00\t";
+	if(cyc==1) file4 << "0x" << std::hex << std::setfill('0') << std::setw(2) << (0XFF & eWord_input[i*7+3]) << std::setw(4) << eWord_input[i*7+4] << std::setfill('0') << std::setw(2) << ( 0xFF & (eWord_input[i*7+5] >> 8)) <<"\t";
+	if(cyc==2) file4 << "0x" << std::hex << std::setfill('0') << std::setw(2) << (0XFF & eWord_input[i*7+1]) << std::setw(4) << eWord_input[i*7+2] << std::setfill('0') << std::setw(2) << ( 0xFF & (eWord_input[i*7+3] >> 8)) <<"\t";
+	if(cyc==3) file4 << "0x00" << std::hex << std::setfill('0') << std::setw(4) << eWord_input[i*7+0] << std::setfill('0') << std::setw(2) << ( 0xFF & (eWord_input[i*7+1] >> 8)) <<"\t";
+      }
+    }
+    lines_match++;
+    file4 << "\n";
+  }
+
+  file4.close();
 
   // Prepare output test vector info
   edm::Handle< float > anomalyHandle;
