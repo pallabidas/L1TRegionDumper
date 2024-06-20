@@ -28,7 +28,7 @@ cd ../CICADA/
 make
 
 cd ../
-git clone git@github.com:pallabidas/L1TRegionDumper.git -b top_master
+git clone git@github.com:pallabidas/L1TRegionDumper.git -b region_match
 
 cd ../
 
