@@ -662,26 +662,26 @@ void L1TRegionDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& i
     }
   }
 
-  if(tempJets.size() > 1){  std::sort(tempJets.begin(), tempJets.end(), compareByPt);}
-  //if(tempJets.size() > 0) std::cout<<"EVENT WITH BOOSTED JET"<<std::endl;
-  for(size_t i = 0; i < 6; i++){
-    if(i < tempJets.size()) {
-      int jet_et = pt_converter(tempJets[i].Pt());
-      int jet_ieta = eta_converter(tempJets[i].Eta());
-      int jet_iphi = phi_converter(tempJets[i].Phi());
-      //std::cout<<"RegionDumper: "<<std::dec<<tempJets[i].Pt()<<"\t"<<tempJets[i].Eta()<<"\t"<<tempJets[i].Phi()<<std::endl;
-      //std::cout<<"RegionDumper: "<<std::dec<<jet_et<<"\t"<<jet_ieta<<"\t"<<jet_iphi<<std::endl;
-      output[i] |= (0x000007FF & jet_et);
-      if(tempJets[i].Eta() > 0) output[i] |= ((0xFF & ieta_lut[0][jet_ieta]) << 11);
-      else output[i] |= ((0xFF & ieta_lut[1][jet_ieta]) << 11);
-      output[i] |= ((0xFF & iphi_lut[jet_iphi]) << 19);
-    }
-    else {
-       output[i] |= (0x000007FF & 0);
-       output[i] |= ((0xFF & ieta_lut[1][default_eta]) << 11);
-       output[i] |= ((0xFF & iphi_lut[default_phi]) << 19);
-    }
-  }
+//  if(tempJets.size() > 1){  std::sort(tempJets.begin(), tempJets.end(), compareByPt);}
+//  //if(tempJets.size() > 0) std::cout<<"EVENT WITH BOOSTED JET"<<std::endl;
+//  for(size_t i = 0; i < 6; i++){
+//    if(i < tempJets.size()) {
+//      int jet_et = pt_converter(tempJets[i].Pt());
+//      int jet_ieta = eta_converter(tempJets[i].Eta());
+//      int jet_iphi = phi_converter(tempJets[i].Phi());
+//      //std::cout<<"RegionDumper: "<<std::dec<<tempJets[i].Pt()<<"\t"<<tempJets[i].Eta()<<"\t"<<tempJets[i].Phi()<<std::endl;
+//      //std::cout<<"RegionDumper: "<<std::dec<<jet_et<<"\t"<<jet_ieta<<"\t"<<jet_iphi<<std::endl;
+//      output[i] |= (0x000007FF & jet_et);
+//      if(tempJets[i].Eta() > 0) output[i] |= ((0xFF & ieta_lut[0][jet_ieta]) << 11);
+//      else output[i] |= ((0xFF & ieta_lut[1][jet_ieta]) << 11);
+//      output[i] |= ((0xFF & iphi_lut[jet_iphi]) << 19);
+//    }
+//    else {
+//       output[i] |= (0x000007FF & 0);
+//       output[i] |= ((0xFF & ieta_lut[1][default_eta]) << 11);
+//       output[i] |= ((0xFF & iphi_lut[default_phi]) << 19);
+//    }
+//  }
 
   // Write output test vector from algoblock
 
