@@ -535,12 +535,12 @@ void L1TRegionDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& i
   uint16_t eWord_input[252] = {0};
   unsigned short lines = 4*readCount_;
   unsigned short lines_input = 4*readCount_;
-    unsigned short lines_match = 4*readCount_;
+  unsigned short lines_match = 4*readCount_;
   unsigned short lines_output = 6*readCount_;
 
   for (unsigned int ireg = 0; ireg < 252; ireg++){
-    eWord[ireg] = regionColl[ireg];
-    eWord_input[ireg] = cregions[ireg];
+    if(readCount_ < 2) eWord[ireg] = regionColl[ireg];
+    if(readCount_ < 2) eWord_input[ireg] = cregions[ireg];
   }
 
   // Write input test vector to algoblock
@@ -642,10 +642,10 @@ void L1TRegionDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& i
   ap_ufixed<16, 16> modelResult = ap_ufixed<16, 16>(integerRep);
 
   uint32_t output[6] = {0};
-  output[0] |= ((0xF & modelResult.range(15, 12)) << 28);
-  output[1] |= ((0xF & modelResult.range(11, 8)) << 28);
-  output[2] |= ((0xF & modelResult.range(7, 4)) << 28);
-  output[3] |= ((0xF & modelResult.range(3, 0)) << 28);
+  if(readCount_ < 2) output[0] |= ((0xF & modelResult.range(15, 12)) << 28);
+  if(readCount_ < 2) output[1] |= ((0xF & modelResult.range(11, 8)) << 28);
+  if(readCount_ < 2) output[2] |= ((0xF & modelResult.range(7, 4)) << 28);
+  if(readCount_ < 2) output[3] |= ((0xF & modelResult.range(3, 0)) << 28);
 
   edm::Handle<l1extra::L1JetParticleCollection> boostedJetCollectionHandle;
   iEvent.getByToken(boostedJetToken_, boostedJetCollectionHandle);
