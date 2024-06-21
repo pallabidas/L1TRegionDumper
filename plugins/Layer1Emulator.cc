@@ -186,6 +186,7 @@ bool Layer1Emulator::writeLink(char CTP7Name[7], int zside, int ietaIn, int iphi
     int iphiFind = iphi;
     if(iphiFind == 73) iphiFind = 1;
     if(iphiFind == 74) iphiFind = 2;
+    if(!(count < 2)) continue;
 
     if(!findHcal(  zside*ieta   , iphiFind, hcalTpgs,  hcalEt[index],    hcalFG[index]))
       std::cout<<"Error!" <<std::endl;
