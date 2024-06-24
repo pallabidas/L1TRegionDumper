@@ -1,8 +1,19 @@
 import os
 import FWCore.ParameterSet.Config as cms
+from FWCore.ParameterSet.VarParsing import VarParsing
 
 from Configuration.Eras.Era_Run3_2023_cff import Run3_2023
 process = cms.Process("L1TRegionDumperTest", Run3_2023)
+
+options = VarParsing('analysis')
+options.register(
+    'foldername',
+    None,
+    VarParsing.multiplicity.singleton,
+    VarParsing.varType.string,
+    'Folder to save patterns into'
+)
+options.parseArguments()
 
 #process = cms.Process("L1TRegionDumperTest")
 
@@ -60,7 +71,8 @@ process.caloDigis = cms.EDAnalyzer(
     ecalDigis = cms.InputTag("ecalDigis:EcalTriggerPrimitives"),
     hcalValue = cms.untracked.int32(40),
     ecalValue = cms.untracked.int32(40),
-    debug = cms.bool(False)
+    debug = cms.bool(False),
+    foldername = cms.untracked.string(options.foldername),
 )
 
 #process.uctDigiStep = cms.Path(gctDigis*gtDigis*ecalDigis*hcalDigis)
@@ -72,17 +84,22 @@ process.l1tRegionDumper = cms.EDAnalyzer(
     #UCTRegion = cms.untracked.InputTag("l1tRegionProd", "TestRegion"),
     scoreSource = cms.InputTag("simCaloStage2Layer1Summary", "CICADAScore"),
     boostedJetCollection = cms.InputTag("simCaloStage2Layer1Summary", "Boosted"),
+    foldername = cms.untracked.string(options.foldername),
 )
 process.ntuple = cms.Path(process.caloDigis*process.l1tCaloLayer1Digis*process.simCaloStage2Layer1Digis*process.l1tRegionDumper)
 #process.ntuple = cms.Path(process.l1tCaloLayer1Digis*process.simCaloStage2Layer1Digis*process.l1tRegionDumper)
 
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(256) )
 
+process.MessageLogger.cerr.FwkReport.reportEvery = 500
+
 process.source = cms.Source(
     "PoolSource",
     fileNames = cms.untracked.vstring(
         #'root://cms-xrd-global.cern.ch://store/mc/Run3Summer23BPixDRPremix/GluGluHToBB_M-125_TuneCP5_13p6TeV_powheg-pythia8/GEN-SIM-RAW/130X_mcRun3_2023_realistic_postBPix_v2-v2/50000/001b463e-dbe7-4fe0-820d-528fa57cb4ac.root'
-        '/store/mc/Run3Winter24Digi/GluGluHToBB_M-125_TuneCP5_13p6TeV_powheg-pythia8/GEN-SIM-RAW/133X_mcRun3_2024_realistic_v8-v2/2540000/0066ab2f-839e-43b3-8c6e-d551d634ae4c.root',
+        #'/store/mc/Run3Winter24Digi/GluGluHToBB_M-125_TuneCP5_13p6TeV_powheg-pythia8/GEN-SIM-RAW/133X_mcRun3_2024_realistic_v8-v2/2540000/0066ab2f-839e-43b3-8c6e-d551d634ae4c.root',
+        options.inputFiles
+#        'root://cms-xrd-global.cern.ch://store/mc/Run3Summer23BPixDRPremix/GluGluHToBB_M-125_TuneCP5_13p6TeV_powheg-pythia8/GEN-SIM-RAW/130X_mcRun3_2023_realistic_postBPix_v2-v2/50000/001b463e-dbe7-4fe0-820d-528fa57cb4ac.root'
         #'root://cms-xrd-global.cern.ch://store/data/Run2023D/ZeroBias/RAW/v1/000/369/869/00000/ebb4bfa3-c235-4534-95f5-5a83f52de1d2.root'
         #'root://cms-xrd-global.cern.ch://store/data/Run2018A/ZeroBias/RAW/v1/000/315/267/00000/FEF4A8AF-E449-E811-BF43-02163E017F01.root'
     )

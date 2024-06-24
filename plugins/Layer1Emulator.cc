@@ -53,6 +53,7 @@ private:
   bool debug_;
   edm::ESGetToken<CaloTPGTranscoder, CaloTPGRecord> decoderToken_;
   int readCount_;
+  std::string folder_;
 };
 
 Layer1Emulator::Layer1Emulator(const edm::ParameterSet& pset) {
@@ -63,10 +64,13 @@ Layer1Emulator::Layer1Emulator(const edm::ParameterSet& pset) {
   debug_ = pset.exists("debug") ? pset.getParameter<bool>("debug") : false;
   decoderToken_ = esConsumes<CaloTPGTranscoder, CaloTPGRecord>();
   readCount_ = 0;
+  folder_ = pset.getUntrackedParameter<std::string>("foldername","");
 }
 
 void Layer1Emulator::analyze(const edm::Event& evt, const edm::EventSetup& es) {
   using namespace edm;
+//  char foldername_ = char(folder_);
+  const char* foldername_ = folder_.c_str();
 
   int nCTP7s = 36;
   //int nCTP7s = 4;
@@ -107,10 +111,10 @@ void Layer1Emulator::analyze(const edm::Event& evt, const edm::EventSetup& es) {
   std::fstream fileLocations;
 
   char fileName[20];
-  sprintf(fileName,"Events.txt");
+  sprintf(fileName,"%sEvents.txt",foldername_);
   file.open(fileName,std::fstream::in | std::fstream::out | std::fstream::app);
 
-  sprintf(fileName,"EventLocations.txt");
+  sprintf(fileName,"%sEventLocations.txt",foldername_);
   fileLocations.open(fileName,std::fstream::in | std::fstream::out | std::fstream::app);
 
   //get ecal and hcal digis
@@ -149,10 +153,10 @@ bool Layer1Emulator::writeLink(char CTP7Name[7], int zside, int ietaIn, int iphi
   std::fstream fileHcal;
   char fileNameHcal[40];
   char fileNameEcal[40];
-  
+  const char* foldername_ = folder_.c_str(); 
 
-  sprintf(fileNameHcal,"calo_slice_phi_%02u_%s_ieta_%02i_HCAL.txt",gctphiIn,CTP7Name,ietaIn);
-  sprintf(fileNameEcal,"calo_slice_phi_%02u_%s_ieta_%02i_ECAL.txt",gctphiIn,CTP7Name,ietaIn);
+  sprintf(fileNameHcal,"%scalo_slice_phi_%02u_%s_ieta_%02i_HCAL.txt",foldername_,gctphiIn,CTP7Name,ietaIn);
+  sprintf(fileNameEcal,"%scalo_slice_phi_%02u_%s_ieta_%02i_ECAL.txt",foldername_,gctphiIn,CTP7Name,ietaIn);
 
   //std::cout<<"fileNameEcal "<<fileNameEcal<<" fileNameHcal "<<fileNameHcal<<std::endl;
   //sprintf(fileNameHcal,"%s_HCAL_Ieta%i_GCTphi%u_HCAL.txt",CTP7Name,ietaIn,gctphiIn);
@@ -186,7 +190,6 @@ bool Layer1Emulator::writeLink(char CTP7Name[7], int zside, int ietaIn, int iphi
     int iphiFind = iphi;
     if(iphiFind == 73) iphiFind = 1;
     if(iphiFind == 74) iphiFind = 2;
-    if(!(count < 2)) continue;
 
     if(!findHcal(  zside*ieta   , iphiFind, hcalTpgs,  hcalEt[index],    hcalFG[index]))
       std::cout<<"Error!" <<std::endl;
