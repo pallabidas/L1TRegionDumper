@@ -25,8 +25,7 @@ public:
 		edm::Handle<edm::SortedCollection<HcalTriggerPrimitiveDigi> > &hcalTpgs, 
 		int &hcalEt, int &hcalFG);
 
-  bool writeLink(char CTP7Name[7], int zside, int ietaIn, int iphiIn, unsigned int gctphiIn,
-			       //bool writeLink(char CTP7Name[7], int zside, int ietaIn, int iphiIn,
+  bool writeLink(std::string CTP7Name, int zside, int ietaIn, int iphiIn, unsigned int gctphiIn,
 		 edm::Handle<edm::SortedCollection<HcalTriggerPrimitiveDigi> > &hcalTpgs,
 		 edm::Handle<EcalTrigPrimDigiCollection> &ecalTpgs, int count);
 
@@ -69,14 +68,13 @@ Layer1Emulator::Layer1Emulator(const edm::ParameterSet& pset) {
 
 void Layer1Emulator::analyze(const edm::Event& evt, const edm::EventSetup& es) {
   using namespace edm;
-//  char foldername_ = char(folder_);
-  const char* foldername_ = folder_.c_str();
+  std::string foldername_ = folder_;
 
   int nCTP7s = 36;
   //int nCTP7s = 4;
 
   struct ctp7{
-    char name[7];
+    std::string name;
     int zside;
     int iphi;
     unsigned int gctphi;
@@ -92,8 +90,8 @@ void Layer1Emulator::analyze(const edm::Event& evt, const edm::EventSetup& es) {
     int iM = i*2 + 1;
     int temp_phi = i*4 - 1;
     if(temp_phi < 1) temp_phi += 72;
-    CTP7[iP].zside =  1; CTP7[iP].iphi = temp_phi; sprintf(CTP7[iP].name,"P"); 
-    CTP7[iM].zside = -1; CTP7[iM].iphi = temp_phi; sprintf(CTP7[iM].name,"M"); 
+    CTP7[iP].zside =  1; CTP7[iP].iphi = temp_phi; CTP7[iP].name = "P";
+    CTP7[iM].zside = -1; CTP7[iM].iphi = temp_phi; CTP7[iM].name = "M";
     }
 
   //calculate gct phi for all
@@ -107,15 +105,12 @@ void Layer1Emulator::analyze(const edm::Event& evt, const edm::EventSetup& es) {
   edm::Handle<HcalTrigPrimDigiCollection> hcalTpgs;
   edm::Handle<EcalTrigPrimDigiCollection> ecalTpgs;
 
-  std::fstream file;
-  std::fstream fileLocations;
+  std::ofstream file;
 
-  char fileName[20];
-  sprintf(fileName,"%sEvents.txt",foldername_);
+  std::string fileName;
+  fileName = foldername_ + "Events.txt";
   file.open(fileName,std::fstream::in | std::fstream::out | std::fstream::app);
 
-  sprintf(fileName,"%sEventLocations.txt",foldername_);
-  fileLocations.open(fileName,std::fstream::in | std::fstream::out | std::fstream::app);
 
   //get ecal and hcal digis
   if(evt.getByToken(ecalDigisToken_, ecalTpgs))
@@ -139,27 +134,21 @@ void Layer1Emulator::analyze(const edm::Event& evt, const edm::EventSetup& es) {
 	}
       }
     }
-  fileLocations.close();
   file.close();
   ++readCount_;
 }
 
 
-bool Layer1Emulator::writeLink(char CTP7Name[7], int zside, int ietaIn, int iphiIn, unsigned int gctphiIn,
+bool Layer1Emulator::writeLink(std::string CTP7Name, int zside, int ietaIn, int iphiIn, unsigned int gctphiIn,
 			       edm::Handle<edm::SortedCollection<HcalTriggerPrimitiveDigi> > &hcalTpgs,
 			       edm::Handle<EcalTrigPrimDigiCollection> &ecalTpgs, int count)
 {
-  std::fstream fileEcal;
-  std::fstream fileHcal;
-  char fileNameHcal[40];
-  char fileNameEcal[40];
-  const char* foldername_ = folder_.c_str(); 
+  std::ofstream fileEcal;
+  std::ofstream fileHcal;
 
-  sprintf(fileNameHcal,"%scalo_slice_phi_%02u_%s_ieta_%02i_HCAL.txt",foldername_,gctphiIn,CTP7Name,ietaIn);
-  sprintf(fileNameEcal,"%scalo_slice_phi_%02u_%s_ieta_%02i_ECAL.txt",foldername_,gctphiIn,CTP7Name,ietaIn);
-
-  //std::cout<<"fileNameEcal "<<fileNameEcal<<" fileNameHcal "<<fileNameHcal<<std::endl;
-  //sprintf(fileNameHcal,"%s_HCAL_Ieta%i_GCTphi%u_HCAL.txt",CTP7Name,ietaIn,gctphiIn);
+  std::string foldername_ = folder_;
+  std::string fileNameHcal = foldername_ + "calo_slice_phi_" + std::to_string(gctphiIn) + "_" + CTP7Name + "_ieta_" + std::to_string(ietaIn) + "_HCAL.txt";
+  std::string fileNameEcal = foldername_ + "calo_slice_phi_" + std::to_string(gctphiIn) + "_" + CTP7Name + "_ieta_" + std::to_string(ietaIn) + "_ECAL.txt";
 
   fileEcal.open(fileNameEcal,std::fstream::in | std::fstream::out | std::fstream::app);
   fileHcal.open(fileNameHcal,std::fstream::in | std::fstream::out | std::fstream::app);
