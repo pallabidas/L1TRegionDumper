@@ -28,8 +28,8 @@ process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
 from Configuration.AlCa.GlobalTag import GlobalTag
-#process.GlobalTag = GlobalTag(process.GlobalTag, '130X_dataRun3_Prompt_v4', '')
-process.GlobalTag = GlobalTag(process.GlobalTag, '130X_mcRun3_2023_realistic_postBPix_v2', '')
+process.GlobalTag = GlobalTag(process.GlobalTag, '130X_dataRun3_Prompt_v4', '')
+#process.GlobalTag = GlobalTag(process.GlobalTag, '130X_mcRun3_2023_realistic_postBPix_v2', '')
 
 process.load('L1Trigger.Configuration.SimL1Emulator_cff')
 process.load('L1Trigger.Configuration.CaloTriggerPrimitives_cff')
@@ -85,8 +85,8 @@ process.l1tRegionDumper = cms.EDAnalyzer(
     boostedJetCollection = cms.InputTag("simCaloStage2Layer1Summary", "Boosted"),
     foldername = cms.untracked.string(options.foldername),
 )
-process.ntuple = cms.Path(process.caloDigis*process.l1tCaloLayer1Digis*process.simCaloStage2Layer1Digis*process.l1tRegionDumper)
-#process.ntuple = cms.Path(process.l1tCaloLayer1Digis*process.simCaloStage2Layer1Digis*process.l1tRegionDumper)
+#process.ntuple = cms.Path(process.caloDigis*process.l1tCaloLayer1Digis*process.simCaloStage2Layer1Digis*process.l1tRegionDumper)
+process.ntuple = cms.Path(process.l1tCaloLayer1Digis*process.simCaloStage2Layer1Digis*process.l1tRegionDumper)
 
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(256) )
 
@@ -95,7 +95,9 @@ process.MessageLogger.cerr.FwkReport.reportEvery = 500
 process.source = cms.Source(
     "PoolSource",
     fileNames = cms.untracked.vstring(
-        options.inputFiles
+        'root://cms-xrd-global.cern.ch://store/data/Run2024F/ZeroBias/RAW/v1/000/382/725/00000/02194218-0f8c-43fd-b97d-431cac44c781.root',
+        'root://cms-xrd-global.cern.ch://store/data/Run2024F/ZeroBias/RAW/v1/000/382/725/00000/59bb056f-8499-4086-b794-148203070300.root'
+#        options.inputFiles
 #        'root://cms-xrd-global.cern.ch://store/mc/Run3Summer23BPixDRPremix/GluGluHToBB_M-125_TuneCP5_13p6TeV_powheg-pythia8/GEN-SIM-RAW/130X_mcRun3_2023_realistic_postBPix_v2-v2/50000/001b463e-dbe7-4fe0-820d-528fa57cb4ac.root'
         #'root://cms-xrd-global.cern.ch://store/data/Run2023D/ZeroBias/RAW/v1/000/369/869/00000/ebb4bfa3-c235-4534-95f5-5a83f52de1d2.root'
         #'root://cms-xrd-global.cern.ch://store/data/Run2018A/ZeroBias/RAW/v1/000/315/267/00000/FEF4A8AF-E449-E811-BF43-02163E017F01.root'
@@ -105,6 +107,15 @@ process.source = cms.Source(
 #process.source.eventsToProcess = cms.untracked.VEventRange("369869:56300216","369869:56194154","369869:58331384","369869:58280392","369869:58340410")
 #process.source.eventsToProcess = cms.untracked.VEventRange("369869:55045026","369869:54991599","369869:54945619","369869:54998508")
 #process.source.eventsToProcess = cms.untracked.VEventRange("1:259012")
+
+listEventsToProcess = []
+fileEventsToProcess = open("/afs/cern.ch/work/p/pdas/Run3Ntuplizer/Layer1pattern/CMSSW_14_0_0_pre2/src/anomalyDetection/L1TRegionDumper/test/events_to_process.txt","r")
+for line in fileEventsToProcess:
+        cleanLine = line.rstrip()
+        listEventsToProcess.append(cleanLine+"-"+cleanLine)
+
+rangeEventsToProcess = cms.untracked.VEventRange(listEventsToProcess)
+process.source.eventsToProcess = rangeEventsToProcess
 
 process.options = cms.untracked.PSet(
     

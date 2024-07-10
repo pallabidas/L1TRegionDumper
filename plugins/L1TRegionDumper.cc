@@ -206,11 +206,13 @@ void L1TRegionDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& i
   cregions.clear();
   uint16_t regionColl[252];
   uint16_t regionColl_input[14][18];
+  //uint16_t regionColl_inverted[14][18];
   int count=0;
   // Add default non-zero region indices to be consistent with firmware: regionIndex = 0 corresponding to calo coordinates {71, 25, 1}
   int default_eta = 25;
   int default_phi = 71;
   const char* foldername_ = folder_.c_str();
+  int event = iEvent.id().event();
   //std::cout<<"readCount_: "<<readCount_<<std::endl;
 
   for (const auto& region : iEvent.get(regionsToken_)) {
@@ -223,6 +225,11 @@ void L1TRegionDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& i
     //bool tauBit = !((l1tcalo::RegionTauVeto & regionSummary) == l1tcalo::RegionTauVeto);
     //uint32_t hitTowerLocation = (location & 0xF);
     regionColl_input[ieta][iphi] = regionSummary;
+    // inverting eta ordering: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 -> 6 5 4 3 2 1 0 13 12 11 10 9 8 7
+    //int inv_ieta;
+    //if (ieta < 7) inv_ieta = 6 - ieta;
+    //else inv_ieta = 13 - ieta + 7;
+    //regionColl_inverted[inv_ieta][iphi] = regionSummary;
     // if(iphi==0) {
     //   std::cout<<"iPhi 0, iEta "<<ieta<<" Region Hex: "<<std::hex<<std::setfill('0')<<std::setw(4)<<regionSummary<<std::endl;
     // }
@@ -542,8 +549,8 @@ void L1TRegionDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& i
   unsigned short lines_output = 6*readCount_;
 
   for (unsigned int ireg = 0; ireg < 252; ireg++){
-    eWord[ireg] = regionColl[ireg];
-    eWord_input[ireg] = cregions[ireg];
+    if (event == 24617400) eWord[ireg] = regionColl[ireg];
+    if (event == 24617400) eWord_input[ireg] = cregions[ireg];
   }
 
   // Write input test vector to algoblock
@@ -645,10 +652,10 @@ void L1TRegionDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& i
   ap_ufixed<16, 16> modelResult = ap_ufixed<16, 16>(integerRep);
 
   uint32_t output[6] = {0};
-  output[0] |= ((0xF & modelResult.range(15, 12)) << 28);
-  output[1] |= ((0xF & modelResult.range(11, 8)) << 28);
-  output[2] |= ((0xF & modelResult.range(7, 4)) << 28);
-  output[3] |= ((0xF & modelResult.range(3, 0)) << 28);
+  if (event == 24617400) output[0] |= ((0xF & modelResult.range(15, 12)) << 28);
+  if (event == 24617400) output[1] |= ((0xF & modelResult.range(11, 8)) << 28);
+  if (event == 24617400) output[2] |= ((0xF & modelResult.range(7, 4)) << 28);
+  if (event == 24617400) output[3] |= ((0xF & modelResult.range(3, 0)) << 28);
 
   edm::Handle<l1extra::L1JetParticleCollection> boostedJetCollectionHandle;
   iEvent.getByToken(boostedJetToken_, boostedJetCollectionHandle);
