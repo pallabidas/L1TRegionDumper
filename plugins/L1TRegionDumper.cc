@@ -167,6 +167,7 @@ private:
   std::vector<uint16_t> cregions; 
   float anomalyScore;
   std::string folder_;
+  int eventnum_;
 
 };
 
@@ -186,7 +187,8 @@ L1TRegionDumper::L1TRegionDumper(const edm::ParameterSet& iConfig)
   regionsToken_(consumes<std::vector <L1CaloRegion> >(iConfig.getUntrackedParameter<edm::InputTag>("UCTRegion"))),
   boostedJetToken_(consumes< l1extra::L1JetParticleCollection >(iConfig.getParameter<edm::InputTag>("boostedJetCollection"))),
   anomalyToken_(consumes< float >(iConfig.getParameter<edm::InputTag>("scoreSource"))),
-  folder_(iConfig.getUntrackedParameter<std::string>("foldername","")){
+  folder_(iConfig.getUntrackedParameter<std::string>("foldername","")),
+  eventnum_(iConfig.getUntrackedParameter<int>("eventnumber",1)){
   //now do what ever initialization is needed
   triggerTree = fs->make<TTree>("triggerTree", "triggerTree");
   triggerTree->Branch("cregions",     &cregions);
@@ -211,6 +213,7 @@ void L1TRegionDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& i
   int default_eta = 25;
   int default_phi = 71;
   const char* foldername_ = folder_.c_str();
+  int event = iEvent.id().event();
   //std::cout<<"readCount_: "<<readCount_<<std::endl;
 
   for (const auto& region : iEvent.get(regionsToken_)) {
@@ -542,8 +545,8 @@ void L1TRegionDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& i
   unsigned short lines_output = 6*readCount_;
 
   for (unsigned int ireg = 0; ireg < 252; ireg++){
-    eWord[ireg] = regionColl[ireg];
-    eWord_input[ireg] = cregions[ireg];
+    if (event == eventnum_) eWord[ireg] = regionColl[ireg];
+    if (event == eventnum_) eWord_input[ireg] = cregions[ireg];
   }
 
   // Write input test vector to algoblock
@@ -645,10 +648,12 @@ void L1TRegionDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& i
   ap_ufixed<16, 16> modelResult = ap_ufixed<16, 16>(integerRep);
 
   uint32_t output[6] = {0};
-  output[0] |= ((0xF & modelResult.range(15, 12)) << 28);
-  output[1] |= ((0xF & modelResult.range(11, 8)) << 28);
-  output[2] |= ((0xF & modelResult.range(7, 4)) << 28);
-  output[3] |= ((0xF & modelResult.range(3, 0)) << 28);
+  if (event == eventnum_) {
+    output[0] |= ((0xF & modelResult.range(15, 12)) << 28);
+    output[1] |= ((0xF & modelResult.range(11, 8)) << 28);
+    output[2] |= ((0xF & modelResult.range(7, 4)) << 28);
+    output[3] |= ((0xF & modelResult.range(3, 0)) << 28);
+  }
 
   edm::Handle<l1extra::L1JetParticleCollection> boostedJetCollectionHandle;
   iEvent.getByToken(boostedJetToken_, boostedJetCollectionHandle);

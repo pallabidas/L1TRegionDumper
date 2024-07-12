@@ -21,15 +21,15 @@ class Layer1Emulator : public edm::one::EDAnalyzer<edm::one::SharedResources> {
 public:
   Layer1Emulator(const edm::ParameterSet& pset);
   virtual ~Layer1Emulator(){}
-  bool findHcal(int ieta, int iphi, 
+  bool findHcal(int event, int ieta, int iphi, 
 		edm::Handle<edm::SortedCollection<HcalTriggerPrimitiveDigi> > &hcalTpgs, 
 		int &hcalEt, int &hcalFG);
 
-  bool writeLink(std::string CTP7Name, int zside, int ietaIn, int iphiIn, unsigned int gctphiIn,
+  bool writeLink(int event, std::string CTP7Name, int zside, int ietaIn, int iphiIn, unsigned int gctphiIn,
 		 edm::Handle<edm::SortedCollection<HcalTriggerPrimitiveDigi> > &hcalTpgs,
 		 edm::Handle<EcalTrigPrimDigiCollection> &ecalTpgs, int count);
 
-  bool findEcal(int ieta, int iphi, 
+  bool findEcal(int event, int ieta, int iphi,
 		edm::Handle<EcalTrigPrimDigiCollection> &ecalTpgs, 
 		int &ecalEt, int &ecalFG);
 
@@ -53,6 +53,7 @@ private:
   edm::ESGetToken<CaloTPGTranscoder, CaloTPGRecord> decoderToken_;
   int readCount_;
   std::string folder_;
+  int eventnum_;
 };
 
 Layer1Emulator::Layer1Emulator(const edm::ParameterSet& pset) {
@@ -64,6 +65,7 @@ Layer1Emulator::Layer1Emulator(const edm::ParameterSet& pset) {
   decoderToken_ = esConsumes<CaloTPGTranscoder, CaloTPGRecord>();
   readCount_ = 0;
   folder_ = pset.getUntrackedParameter<std::string>("foldername","");
+  eventnum_ = pset.getUntrackedParameter<int>("eventnumber",1);
 }
 
 void Layer1Emulator::analyze(const edm::Event& evt, const edm::EventSetup& es) {
@@ -127,9 +129,9 @@ void Layer1Emulator::analyze(const edm::Event& evt, const edm::EventSetup& es) {
 	int zside = CTP7[iCTP7].zside;
 	int iphi  = CTP7[iCTP7].iphi;
 	unsigned int gctphi  = CTP7[iCTP7].gctphi;
-	
+	int eventnum = evt.id().event();
 	for(int ieta = 1 ; ieta < 28; ieta=ieta+2){
-	  if(!writeLink(CTP7[iCTP7].name,zside,ieta,iphi,gctphi,hcalTpgs,ecalTpgs,readCount_))
+	  if(!writeLink(eventnum, CTP7[iCTP7].name,zside,ieta,iphi,gctphi,hcalTpgs,ecalTpgs,readCount_))
 	    std::cout<<"Error Writing Link"<<std::endl;
 	}
       }
@@ -139,7 +141,7 @@ void Layer1Emulator::analyze(const edm::Event& evt, const edm::EventSetup& es) {
 }
 
 
-bool Layer1Emulator::writeLink(std::string CTP7Name, int zside, int ietaIn, int iphiIn, unsigned int gctphiIn,
+bool Layer1Emulator::writeLink(int event, std::string CTP7Name, int zside, int ietaIn, int iphiIn, unsigned int gctphiIn,
 			       edm::Handle<edm::SortedCollection<HcalTriggerPrimitiveDigi> > &hcalTpgs,
 			       edm::Handle<EcalTrigPrimDigiCollection> &ecalTpgs, int count)
 {
@@ -180,16 +182,16 @@ bool Layer1Emulator::writeLink(std::string CTP7Name, int zside, int ietaIn, int 
     if(iphiFind == 73) iphiFind = 1;
     if(iphiFind == 74) iphiFind = 2;
 
-    if(!findHcal(  zside*ieta   , iphiFind, hcalTpgs,  hcalEt[index],    hcalFG[index]))
+    if(!findHcal(event,  zside*ieta   , iphiFind, hcalTpgs,  hcalEt[index],    hcalFG[index]))
       std::cout<<"Error!" <<std::endl;
   
-    if(!findEcal(  zside*ieta   , iphiFind, ecalTpgs,  ecalEt[index],    ecalFG[index]))
+    if(!findEcal(event,  zside*ieta   , iphiFind, ecalTpgs,  ecalEt[index],    ecalFG[index]))
       std::cout<<"Error!"<<std::endl;
 
-    if(!findHcal( zside*(ieta+1), iphiFind, hcalTpgs, hcalEt[index+1], hcalFG[index+1]))
+    if(!findHcal(event, zside*(ieta+1), iphiFind, hcalTpgs, hcalEt[index+1], hcalFG[index+1]))
       std::cout<<"Error!" <<std::endl;
     
-    if(!findEcal( zside*(ieta+1), iphiFind, ecalTpgs, ecalEt[index+1], ecalFG[index+1]))
+    if(!findEcal(event, zside*(ieta+1), iphiFind, ecalTpgs, ecalEt[index+1], ecalFG[index+1]))
       std::cout<<"Error!"<<std::endl;
 
   }
@@ -246,7 +248,7 @@ void Layer1Emulator::makeword(unsigned int &outputWord, unsigned int word0, unsi
 
 }
 
-bool Layer1Emulator::findHcal(int ieta, int iphi, 
+bool Layer1Emulator::findHcal(int event, int ieta, int iphi, 
 			      edm::Handle<edm::SortedCollection<HcalTriggerPrimitiveDigi> > &hcalTpgs, 
 			      int &hcalEt, int &hcalFG)
 {
@@ -260,6 +262,7 @@ bool Layer1Emulator::findHcal(int ieta, int iphi,
     //std::cout<<"HCAL ietaRef "<<ietaRef<<" zside "<<zside<<std::endl;
     if(ieta == ietaRef && iphi == iphiRef && zside == ieta/(abs(ieta))){
       hcalEt = tpg.SOI_compressedEt();
+      if (event != eventnum_) hcalEt = 0;
       //if((iphiRef > 2 && iphiRef < 7) && (ietaRef > 4 && ietaRef < 9)) hcalEt = tpg.SOI_compressedEt(); // example to select Region 22
       //hcalEt = 255; // saturated Et for the TPG
       hcalFG = tpg.SOI_fineGrain();
@@ -277,7 +280,7 @@ bool Layer1Emulator::findHcal(int ieta, int iphi,
   return true;
 }
 
-bool Layer1Emulator::findEcal(int ieta, int iphi, 
+bool Layer1Emulator::findEcal(int event, int ieta, int iphi, 
 			      edm::Handle<EcalTrigPrimDigiCollection> &ecalTpgs, 
 			      int &ecalEt, int &ecalFG)
 {
@@ -293,6 +296,7 @@ bool Layer1Emulator::findEcal(int ieta, int iphi,
       //if(tpg.compressedEt()>0)
 	//std::cout<<"ECAL ietaRef "<<ietaRef<<" iphiRef "<< iphiRef<<" zside "<<zside<< " tpgET "<< tpg.compressedEt() <<std::endl;
       ecalEt = tpg.compressedEt();
+      if (event != eventnum_) ecalEt = 0;
       //if((iphiRef > 2 && iphiRef < 7) && (ietaRef > 4 && ietaRef < 9)) ecalEt = tpg.compressedEt(); // example to select Region 22
       //ecalEt = 255; // saturated Et for the TPG
       ecalFG = tpg.fineGrain();
