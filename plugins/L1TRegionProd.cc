@@ -102,16 +102,22 @@ L1TRegionProd::~L1TRegionProd() {
 void L1TRegionProd::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
   using namespace edm;
   std::unique_ptr<L1CaloRegionCollection> rgnCollection(std::make_unique<L1CaloRegionCollection>());
+  int event = iEvent.id().event();
 
   for (const auto& region : iEvent.get(regionsToken_)) {
     uint32_t ieta = region.id().ieta();
     uint32_t iphi = region.id().iphi();
     //uint16_t regionSummary = region.raw();
     uint16_t regionSummary = 0;
+    if (event == 27080210 && iphi == 3) {
+      regionSummary = region.raw();
+      regionSummary |= 0x03FF;
+      std::cout<<std::hex<<regionSummary<<std::endl;
+    }
     //if (iphi==9 && (ieta-4==7 || ieta-4==13)) regionSummary = region.raw();
     //if (iphi==0 && ieta-4==7) regionSummary = region.raw();
     //if (readCount_==10 && iphi==0 && ieta-4==10) regionSummary = region.raw();
-    if (readCount_==99 && iphi==7 && ieta-4==1) regionSummary = region.raw();
+    //if (readCount_==99 && iphi==7 && ieta-4==1) regionSummary = region.raw();
     //std::cout<<ieta<<"\t"<<iphi<<"\t"<<regionSummary<<std::endl;
     rgnCollection->push_back(L1CaloRegion((uint16_t)regionSummary, (unsigned)ieta, (unsigned)iphi, (int16_t)0));
     // copy the content of middle crate for the two other crates

@@ -79,8 +79,8 @@ process.caloDigis = cms.EDAnalyzer(
 
 process.l1tRegionDumper = cms.EDAnalyzer(
     "L1TRegionDumper",
-    UCTRegion = cms.untracked.InputTag("simCaloStage2Layer1Digis"),
-    #UCTRegion = cms.untracked.InputTag("l1tRegionProd", "TestRegion"),
+    #UCTRegion = cms.untracked.InputTag("simCaloStage2Layer1Digis"),
+    UCTRegion = cms.untracked.InputTag("l1tRegionProd", "TestRegion"),
     scoreSource = cms.InputTag("simCaloStage2Layer1Summary", "CICADAScore"),
     boostedJetCollection = cms.InputTag("simCaloStage2Layer1Summary", "Boosted"),
     foldername = cms.untracked.string(options.foldername),
@@ -109,7 +109,7 @@ process.source = cms.Source(
 #process.source.eventsToProcess = cms.untracked.VEventRange("1:259012")
 
 listEventsToProcess = []
-fileEventsToProcess = open("/afs/cern.ch/work/p/pdas/Run3Ntuplizer/Layer1pattern/CMSSW_14_0_0_pre2/src/anomalyDetection/L1TRegionDumper/test/events_to_process.txt","r")
+fileEventsToProcess = open("events_to_process.txt","r")
 for line in fileEventsToProcess:
         cleanLine = line.rstrip()
         listEventsToProcess.append(cleanLine+"-"+cleanLine)

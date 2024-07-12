@@ -212,7 +212,7 @@ void L1TRegionDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& i
   int default_eta = 25;
   int default_phi = 71;
   const char* foldername_ = folder_.c_str();
-  int event = iEvent.id().event();
+  //int event = iEvent.id().event();
   //std::cout<<"readCount_: "<<readCount_<<std::endl;
 
   for (const auto& region : iEvent.get(regionsToken_)) {
@@ -549,8 +549,8 @@ void L1TRegionDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& i
   unsigned short lines_output = 6*readCount_;
 
   for (unsigned int ireg = 0; ireg < 252; ireg++){
-    if (event == 24617400) eWord[ireg] = regionColl[ireg];
-    if (event == 24617400) eWord_input[ireg] = cregions[ireg];
+    eWord[ireg] = regionColl[ireg];
+    eWord_input[ireg] = cregions[ireg];
   }
 
   // Write input test vector to algoblock
@@ -652,10 +652,10 @@ void L1TRegionDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& i
   ap_ufixed<16, 16> modelResult = ap_ufixed<16, 16>(integerRep);
 
   uint32_t output[6] = {0};
-  if (event == 24617400) output[0] |= ((0xF & modelResult.range(15, 12)) << 28);
-  if (event == 24617400) output[1] |= ((0xF & modelResult.range(11, 8)) << 28);
-  if (event == 24617400) output[2] |= ((0xF & modelResult.range(7, 4)) << 28);
-  if (event == 24617400) output[3] |= ((0xF & modelResult.range(3, 0)) << 28);
+  output[0] |= ((0xF & modelResult.range(15, 12)) << 28);
+  output[1] |= ((0xF & modelResult.range(11, 8)) << 28);
+  output[2] |= ((0xF & modelResult.range(7, 4)) << 28);
+  output[3] |= ((0xF & modelResult.range(3, 0)) << 28);
 
   edm::Handle<l1extra::L1JetParticleCollection> boostedJetCollectionHandle;
   iEvent.getByToken(boostedJetToken_, boostedJetCollectionHandle);
