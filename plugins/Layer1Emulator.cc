@@ -145,10 +145,16 @@ bool Layer1Emulator::writeLink(std::string CTP7Name, int zside, int ietaIn, int 
 {
   std::ofstream fileEcal;
   std::ofstream fileHcal;
+  std::string string_ieta;
+  std::string string_iphi;
+  if(ietaIn < 10) string_ieta = "0" + std::to_string(ietaIn);
+  else string_ieta = std::to_string(ietaIn);
+  if(gctphiIn < 10) string_iphi = "0" + std::to_string(gctphiIn);
+  else string_iphi = std::to_string(gctphiIn);
 
   std::string foldername_ = folder_;
-  std::string fileNameHcal = foldername_ + "calo_slice_phi_" + std::to_string(gctphiIn) + "_" + CTP7Name + "_ieta_" + std::to_string(ietaIn) + "_HCAL.txt";
-  std::string fileNameEcal = foldername_ + "calo_slice_phi_" + std::to_string(gctphiIn) + "_" + CTP7Name + "_ieta_" + std::to_string(ietaIn) + "_ECAL.txt";
+  std::string fileNameHcal = foldername_ + "calo_slice_phi_" + string_iphi + "_" + CTP7Name + "_ieta_" + string_ieta + "_HCAL";
+  std::string fileNameEcal = foldername_ + "calo_slice_phi_" + string_iphi + "_" + CTP7Name + "_ieta_" + string_ieta + "_ECAL";
 
   fileEcal.open(fileNameEcal,std::fstream::in | std::fstream::out | std::fstream::app);
   fileHcal.open(fileNameHcal,std::fstream::in | std::fstream::out | std::fstream::app);
