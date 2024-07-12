@@ -145,10 +145,16 @@ bool Layer1Emulator::writeLink(std::string CTP7Name, int zside, int ietaIn, int 
 {
   std::ofstream fileEcal;
   std::ofstream fileHcal;
+  std::string string_ieta;
+  std::string string_iphi;
+  if(ietaIn < 10) string_ieta = "0" + std::to_string(ietaIn);
+  else string_ieta = std::to_string(ietaIn);
+  if(gctphiIn < 10) string_iphi = "0" + std::to_string(gctphiIn);
+  else string_iphi = std::to_string(gctphiIn);
 
   std::string foldername_ = folder_;
-  std::string fileNameHcal = foldername_ + "calo_slice_phi_" + std::to_string(gctphiIn) + "_" + CTP7Name + "_ieta_" + std::to_string(ietaIn) + "_HCAL.txt";
-  std::string fileNameEcal = foldername_ + "calo_slice_phi_" + std::to_string(gctphiIn) + "_" + CTP7Name + "_ieta_" + std::to_string(ietaIn) + "_ECAL.txt";
+  std::string fileNameHcal = foldername_ + "calo_slice_phi_" + string_iphi + "_" + CTP7Name + "_ieta_" + string_ieta + "_HCAL";
+  std::string fileNameEcal = foldername_ + "calo_slice_phi_" + string_iphi + "_" + CTP7Name + "_ieta_" + string_ieta + "_ECAL";
 
   fileEcal.open(fileNameEcal,std::fstream::in | std::fstream::out | std::fstream::app);
   fileHcal.open(fileNameHcal,std::fstream::in | std::fstream::out | std::fstream::app);
@@ -180,6 +186,43 @@ bool Layer1Emulator::writeLink(std::string CTP7Name, int zside, int ietaIn, int 
     if(iphiFind == 73) iphiFind = 1;
     if(iphiFind == 74) iphiFind = 2;
 
+    if((count == 10 && (iphiFind > 70 || iphiFind < 3) && zside == -1) ||
+		    (count == 15 && (iphiFind > 70 || iphiFind < 3) && zside == 1) ||
+                    (count == 20 && (iphiFind > 2 && iphiFind < 7) && zside == -1) ||
+		    (count == 25 && (iphiFind > 2 && iphiFind < 7) && zside == 1) ||
+                    (count == 30 && (iphiFind > 6 && iphiFind < 11) && zside == -1) ||
+		    (count == 35 && (iphiFind > 6 && iphiFind < 11) && zside == 1) ||
+                    (count == 40 && (iphiFind > 10 && iphiFind < 15) && zside == -1) ||
+		    (count == 45 && (iphiFind > 10 && iphiFind < 15) && zside == 1) ||
+                    (count == 50 && (iphiFind > 14 && iphiFind < 19) && zside == -1) ||
+		    (count == 55 && (iphiFind > 14 && iphiFind < 19) && zside == 1) ||
+                    (count == 60 && (iphiFind > 18 && iphiFind < 23) && zside == -1) ||
+		    (count == 65 && (iphiFind > 18 && iphiFind < 23) && zside == 1) ||
+                    (count == 70 && (iphiFind > 22 && iphiFind < 27) && zside == -1) ||
+		    (count == 75 && (iphiFind > 22 && iphiFind < 27) && zside == 1) ||
+                    (count == 80 && (iphiFind > 26 && iphiFind < 31) && zside == -1) ||
+		    (count == 85 && (iphiFind > 26 && iphiFind < 31) && zside == 1) ||
+                    (count == 90 && (iphiFind > 30 && iphiFind < 35) && zside == -1) ||
+		    (count == 95 && (iphiFind > 30 && iphiFind < 35) && zside == 1) ||
+                    (count == 100 && (iphiFind > 34 && iphiFind < 39) && zside == -1) ||
+		    (count == 105 && (iphiFind > 34 && iphiFind < 39) && zside == 1) ||
+                    (count == 110 && (iphiFind > 38 && iphiFind < 43) && zside == -1) ||
+		    (count == 115 && (iphiFind > 38 && iphiFind < 43) && zside == 1) ||
+                    (count == 120 && (iphiFind > 42 && iphiFind < 47) && zside == -1) ||
+		    (count == 125 && (iphiFind > 42 && iphiFind < 47) && zside == 1) ||
+                    (count == 130 && (iphiFind > 46 && iphiFind < 50) && zside == -1) ||
+		    (count == 135 && (iphiFind > 46 && iphiFind < 50) && zside == 1) ||
+                    (count == 140 && (iphiFind > 50 && iphiFind < 54) && zside == -1) ||
+		    (count == 145 && (iphiFind > 50 && iphiFind < 54) && zside == 1) ||
+                    (count == 150 && (iphiFind > 54 && iphiFind < 58) && zside == -1) ||
+		    (count == 155 && (iphiFind > 54 && iphiFind < 58) && zside == 1) ||
+                    (count == 160 && (iphiFind > 58 && iphiFind < 62) && zside == -1) ||
+		    (count == 165 && (iphiFind > 58 && iphiFind < 62) && zside == 1) ||
+                    (count == 170 && (iphiFind > 62 && iphiFind < 66) && zside == -1) ||
+		    (count == 175 && (iphiFind > 62 && iphiFind < 66) && zside == 1) ||
+                    (count == 180 && (iphiFind > 66 && iphiFind < 70) && zside == -1) ||
+		    (count == 185 && (iphiFind > 66 && iphiFind < 70) && zside == 1))  {
+
     if(!findHcal(  zside*ieta   , iphiFind, hcalTpgs,  hcalEt[index],    hcalFG[index]))
       std::cout<<"Error!" <<std::endl;
   
@@ -191,6 +234,8 @@ bool Layer1Emulator::writeLink(std::string CTP7Name, int zside, int ietaIn, int 
     
     if(!findEcal( zside*(ieta+1), iphiFind, ecalTpgs, ecalEt[index+1], ecalFG[index+1]))
       std::cout<<"Error!"<<std::endl;
+
+    }
 
   }
   
@@ -259,9 +304,9 @@ bool Layer1Emulator::findHcal(int ieta, int iphi,
     short zside = tpg.id().zside();
     //std::cout<<"HCAL ietaRef "<<ietaRef<<" zside "<<zside<<std::endl;
     if(ieta == ietaRef && iphi == iphiRef && zside == ieta/(abs(ieta))){
-      hcalEt = tpg.SOI_compressedEt();
+      //hcalEt = tpg.SOI_compressedEt();
       //if((iphiRef > 2 && iphiRef < 7) && (ietaRef > 4 && ietaRef < 9)) hcalEt = tpg.SOI_compressedEt(); // example to select Region 22
-      //hcalEt = 255; // saturated Et for the TPG
+      hcalEt = 255; // saturated Et for the TPG
       hcalFG = tpg.SOI_fineGrain();
       foundDigi = true;
       break;
@@ -292,9 +337,9 @@ bool Layer1Emulator::findEcal(int ieta, int iphi,
     if(ieta == ietaRef && iphi == iphiRef && zside == ieta/(abs(ieta))){
       //if(tpg.compressedEt()>0)
 	//std::cout<<"ECAL ietaRef "<<ietaRef<<" iphiRef "<< iphiRef<<" zside "<<zside<< " tpgET "<< tpg.compressedEt() <<std::endl;
-      ecalEt = tpg.compressedEt();
+      //ecalEt = tpg.compressedEt();
       //if((iphiRef > 2 && iphiRef < 7) && (ietaRef > 4 && ietaRef < 9)) ecalEt = tpg.compressedEt(); // example to select Region 22
-      //ecalEt = 255; // saturated Et for the TPG
+      ecalEt = 255; // saturated Et for the TPG
       ecalFG = tpg.fineGrain();
       foundDigi = true;
       break;
