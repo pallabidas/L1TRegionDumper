@@ -50,5 +50,3 @@ scram b -j 12
 cd anomalyDetection
 cmsRun L1TRegionDumper/test/testL1TRegionDumper.py inputFiles="{input file name}" foldename="{full path to storage directory}"
 ```
-
-The analyzer produces input to the algoblock taking the top crate as master, the output follows the interface document discussed with uGT.
