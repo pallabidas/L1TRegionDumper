@@ -36,6 +36,7 @@
 #include "DataFormats/L1CaloTrigger/interface/L1CaloCollections.h"
 #include "DataFormats/L1Trigger/interface/L1JetParticle.h"
 #include "DataFormats/L1Trigger/interface/L1JetParticleFwd.h"
+#include "DataFormats/L1CaloTrigger/interface/CICADA.h"
 
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
@@ -156,7 +157,7 @@ private:
   
   edm::EDGetTokenT<std::vector <L1CaloRegion> > regionsToken_;
   edm::EDGetTokenT< l1extra::L1JetParticleCollection > boostedJetToken_;
-  edm::EDGetTokenT< float > anomalyToken_;
+  edm::EDGetTokenT< l1t::CICADABxCollection > anomalyToken_;
 #ifdef THIS_IS_AN_EVENTSETUP_EXAMPLE
   edm::ESGetToken<SetupData, SetupRecord> setupToken_;
 #endif
@@ -184,7 +185,7 @@ L1TRegionDumper::L1TRegionDumper(const edm::ParameterSet& iConfig)
   : readCount_(0),
   regionsToken_(consumes<std::vector <L1CaloRegion> >(iConfig.getUntrackedParameter<edm::InputTag>("UCTRegion"))),
   boostedJetToken_(consumes< l1extra::L1JetParticleCollection >(iConfig.getParameter<edm::InputTag>("boostedJetCollection"))),
-  anomalyToken_(consumes< float >(iConfig.getParameter<edm::InputTag>("scoreSource"))) {
+    anomalyToken_(consumes< l1t::CICADABxCollection >(iConfig.getParameter<edm::InputTag>("scoreSource"))) {
   //now do what ever initialization is needed
   triggerTree = fs->make<TTree>("triggerTree", "triggerTree");
   triggerTree->Branch("cregions",     &cregions);
@@ -596,9 +597,10 @@ void L1TRegionDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& i
   file3.close();
 
   // Prepare output test vector info
-  edm::Handle< float > anomalyHandle;
+  edm::Handle< l1t::CICADABxCollection > anomalyHandle;
   iEvent.getByToken(anomalyToken_, anomalyHandle);
-  anomalyScore = *anomalyHandle;
+  //anomalyScore = *anomalyHandle;
+  anomalyScore = anomalyHandle->at(0, 0);
   //std::cout<<"RegionDumper: anomalyScore = "<<std::dec<<anomalyScore<<std::endl;
 
   unsigned int integerRep = anomalyScore * pow(2.0, 8);

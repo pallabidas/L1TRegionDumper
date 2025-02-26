@@ -18,7 +18,8 @@ process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
 from Configuration.AlCa.GlobalTag import GlobalTag
 #process.GlobalTag = GlobalTag(process.GlobalTag, '130X_dataRun3_Prompt_v4', '')
-process.GlobalTag = GlobalTag(process.GlobalTag, '130X_mcRun3_2023_realistic_postBPix_v2', '')
+#process.GlobalTag = GlobalTag(process.GlobalTag, '130X_mcRun3_2023_realistic_postBPix_v2', '')
+process.GlobalTag = GlobalTag(process.GlobalTag, '133X_mcRun3_2024_realistic_v8')
 
 process.load('L1Trigger.Configuration.SimL1Emulator_cff')
 process.load('L1Trigger.Configuration.CaloTriggerPrimitives_cff')
@@ -80,7 +81,8 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(256) )
 process.source = cms.Source(
     "PoolSource",
     fileNames = cms.untracked.vstring(
-        'root://cms-xrd-global.cern.ch://store/mc/Run3Summer23BPixDRPremix/GluGluHToBB_M-125_TuneCP5_13p6TeV_powheg-pythia8/GEN-SIM-RAW/130X_mcRun3_2023_realistic_postBPix_v2-v2/50000/001b463e-dbe7-4fe0-820d-528fa57cb4ac.root'
+        #'root://cms-xrd-global.cern.ch://store/mc/Run3Summer23BPixDRPremix/GluGluHToBB_M-125_TuneCP5_13p6TeV_powheg-pythia8/GEN-SIM-RAW/130X_mcRun3_2023_realistic_postBPix_v2-v2/50000/001b463e-dbe7-4fe0-820d-528fa57cb4ac.root'
+        '/store/mc/Run3Winter24Digi/GluGluHToBB_M-125_TuneCP5_13p6TeV_powheg-pythia8/GEN-SIM-RAW/133X_mcRun3_2024_realistic_v8-v2/2540000/0066ab2f-839e-43b3-8c6e-d551d634ae4c.root',
         #'root://cms-xrd-global.cern.ch://store/data/Run2023D/ZeroBias/RAW/v1/000/369/869/00000/ebb4bfa3-c235-4534-95f5-5a83f52de1d2.root'
         #'root://cms-xrd-global.cern.ch://store/data/Run2018A/ZeroBias/RAW/v1/000/315/267/00000/FEF4A8AF-E449-E811-BF43-02163E017F01.root'
     )
