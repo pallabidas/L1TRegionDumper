@@ -186,7 +186,7 @@ L1TRegionDumper::L1TRegionDumper(const edm::ParameterSet& iConfig)
   : readCount_(0),
   regionsToken_(consumes<std::vector <L1CaloRegion> >(iConfig.getUntrackedParameter<edm::InputTag>("UCTRegion"))),
   boostedJetToken_(consumes< l1extra::L1JetParticleCollection >(iConfig.getParameter<edm::InputTag>("boostedJetCollection"))),
-  anomalyToken_(consumes< l1t::CICADABxCollection >(iConfig.getParameter<edm::InputTag>("scoreSource"))) 
+    anomalyToken_(consumes< l1t::CICADABxCollection >(iConfig.getParameter<edm::InputTag>("scoreSource"))),
   folder_(iConfig.getUntrackedParameter<std::string>("foldername","")){
   //now do what ever initialization is needed
   triggerTree = fs->make<TTree>("triggerTree", "triggerTree");
